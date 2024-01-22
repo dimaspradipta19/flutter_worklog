@@ -133,8 +133,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           ), (route) => false);
                         }
                       },
-                      child: const Text("Login"),
+                      child: Text(
+                        "Login",
+                        style: myTextTheme.titleMedium!
+                            .copyWith(color: whiteColor),
+                      ),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Dont have an account ?"),
+                        TextButton(
+                            onPressed: () {}, child: const Text("Sign up here"))
+                      ],
+                    )
                   ],
                 ),
               ),
