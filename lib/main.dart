@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_worklog/ui/home_screen/home_screen.dart';
+// import 'package:flutter_worklog/ui/home_screen/home_screen.dart';
 import 'package:flutter_worklog/ui/login_screen/login_screen.dart';
 
 void main() {
@@ -12,14 +12,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Hit Map',
+      title: 'WorkLog App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // home: const LoginScreen(),
-      home: const HomeScreen(),
+      home: const LoginScreen(),
+      // home: const HomeScreen(),
     );
   }
 }

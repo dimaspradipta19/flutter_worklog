@@ -19,39 +19,84 @@ const Color redColor1 = Color(0xFFCD5E74);
 
 final TextTheme myTextTheme = TextTheme(
   displayLarge: GoogleFonts.poppins(
-      fontSize: 92, fontWeight: FontWeight.w300, letterSpacing: -1.5),
+    fontSize: 92,
+    fontWeight: FontWeight.w300,
+    letterSpacing: -1.5,
+  ),
   displayMedium: GoogleFonts.poppins(
-      fontSize: 57, fontWeight: FontWeight.w300, letterSpacing: -0.5),
-  displaySmall: GoogleFonts.poppins(fontSize: 46, fontWeight: FontWeight.w400),
+    fontSize: 57,
+    fontWeight: FontWeight.w300,
+    letterSpacing: -0.5,
+  ),
+  displaySmall: GoogleFonts.poppins(
+    fontSize: 46,
+    fontWeight: FontWeight.w400,
+  ),
 
   // Headline
   headlineLarge: GoogleFonts.poppins(
-      fontSize: 36, fontWeight: FontWeight.w400, letterSpacing: 0.25),
+    fontSize: 36,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.25,
+  ),
   headlineMedium: GoogleFonts.poppins(
-      fontSize: 32, fontWeight: FontWeight.w400, letterSpacing: 0.25),
-  headlineSmall: GoogleFonts.poppins(fontSize: 23, fontWeight: FontWeight.w400),
+    fontSize: 32,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.25,
+  ),
+  headlineSmall: GoogleFonts.poppins(
+    fontSize: 24,
+    fontWeight: FontWeight.w400,
+  ),
 
   // Title
   titleLarge: GoogleFonts.poppins(
-      fontSize: 19, fontWeight: FontWeight.w500, letterSpacing: 0.15),
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.15,
+  ),
   titleMedium: GoogleFonts.poppins(
-      fontSize: 15, fontWeight: FontWeight.w400, letterSpacing: 0.15),
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.15,
+  ),
   titleSmall: GoogleFonts.poppins(
-      fontSize: 13, fontWeight: FontWeight.w500, letterSpacing: 0.1),
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.1,
+  ),
 
   // Body
   bodyLarge: GoogleFonts.poppins(
-      fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.5),
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.5,
+  ),
   bodyMedium: GoogleFonts.poppins(
-      fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.25),
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.25,
+  ),
   bodySmall: GoogleFonts.poppins(
-      fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.25),
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.25,
+  ),
 
   // Label
   labelLarge: GoogleFonts.poppins(
-      fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 1.25),
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 1.25,
+  ),
   labelMedium: GoogleFonts.poppins(
-      fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.4),
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.4,
+  ),
   labelSmall: GoogleFonts.poppins(
-      fontSize: 10, fontWeight: FontWeight.w400, letterSpacing: 1.5),
+    fontSize: 10,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 1.5,
+  ),
 );
