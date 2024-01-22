@@ -15,6 +15,15 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   // final _formKey = GlobalKey<FormState>();
+  List<String> daysOfWeek = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
 
   @override
   void dispose() {
@@ -139,56 +148,53 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     const SizedBox(height: 70.0),
-                    Table(
-                      border: TableBorder.all(color: blackColor, width: 1.0),
-                      children: const [
-                        TableRow(
-                          children: [
-                            Text(
-                              "Senin",
-                            ),
-                            Text(
-                              "Selasa",
-                            ),
-                            Text(
-                              "Rabu",
-                            ),
-                            Text(
-                              "Kamis",
-                            ),
-                            Text(
-                              "Jumat",
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            Text(
-                              "Senin",
-                            ),
-                            Text(
-                              "Selasa",
-                            ),
-                            Text(
-                              "Rabu",
-                            ),
-                            Text(
-                              "Kamis",
-                            ),
-                            Text(
-                              "",
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-
                     Container(
-                      height: MediaQuery.of(context).size.height,
+                      color: forthColor,
+                      height: 500,
                       width: MediaQuery.of(context).size.width,
-                      color: greyColor1,
-                      child: const Column(
-                        children: [],
+                      child: Center(
+                        child: ListView.builder(
+                          itemCount: daysOfWeek.length,
+                          shrinkWrap: true,
+                          // physics: const NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          padding: EdgeInsets.zero,
+                          itemBuilder: (context, indexDay) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Text(daysOfWeek[indexDay]),
+                                    SizedBox(
+                                      width: 200.0,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: indexDay + 1,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        padding: EdgeInsets.zero,
+                                        itemBuilder: (context, indexCard) {
+                                          return Padding(
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: Container(
+                                              height: indexCard.isEven
+                                                  ? 20 + indexCard.toDouble() * 20
+                                                  : 20,
+                                              width: 200,
+                                              color: yellowColor1,
+                                              child: Text(indexCard.toString()),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],
