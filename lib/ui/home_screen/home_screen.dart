@@ -607,7 +607,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           .spaceBetween,
                                                                   children: [
                                                                     Text(
-                                                                      "Meeting OCTO FRIENDS ${daysOfWeek[indexDay]}",
+                                                                      valuePostData
+                                                                          .dataWorklog[
+                                                                              indexCard]
+                                                                          .titleWorklog,
                                                                       style: myTextTheme
                                                                           .titleLarge!
                                                                           .copyWith(
@@ -634,7 +637,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             ),
                                                                             const SizedBox(width: 4.0),
                                                                             Text(
-                                                                              "OCTO FRIENDS",
+                                                                              valuePostData.dataWorklog[indexCard].projectName,
                                                                               style: myTextTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
                                                                             ),
                                                                           ],
@@ -649,7 +652,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       vertical:
                                                                           16.0),
                                                                   child: Text(
-                                                                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy",
+                                                                    valuePostData
+                                                                        .dataWorklog[
+                                                                            indexCard]
+                                                                        .descriptionWorklog,
                                                                     maxLines: 3,
                                                                     overflow:
                                                                         TextOverflow
@@ -697,7 +703,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               .copyWith(fontWeight: FontWeight.w600),
                                                                         ),
                                                                         Text(
-                                                                          "22/01/2024",
+                                                                          valuePostData
+                                                                              .dataWorklog[indexCard]
+                                                                              .date,
                                                                           style:
                                                                               myTextTheme.bodyMedium,
                                                                         ),
@@ -718,7 +726,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               .copyWith(fontWeight: FontWeight.w600),
                                                                         ),
                                                                         Text(
-                                                                          "09.00 - 11.00",
+                                                                          "${valuePostData.dataWorklog[indexCard].timeStart} - ${valuePostData.dataWorklog[indexCard].timeEnd}",
                                                                           style:
                                                                               myTextTheme.bodyMedium,
                                                                         ),
