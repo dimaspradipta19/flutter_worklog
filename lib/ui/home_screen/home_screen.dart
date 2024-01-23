@@ -45,6 +45,17 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> displayTimePickerEnd(BuildContext context) async {
+    var timeEnd =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+
+    if (timeEnd != null) {
+      setState(() {
+        _timeEndController.text = "${timeEnd.hour}:${timeEnd.minute}";
+      });
+    }
+  }
+
   Future<void> _selectDate() async {
     DateTime? _picked = await showDatePicker(
         context: context,
@@ -67,8 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'Wednesday',
     'Thursday',
     'Friday',
-    'Saturday',
-    'Sunday',
   ];
 
   @override
@@ -88,365 +97,436 @@ class _HomeScreenState extends State<HomeScreen> {
                     horizontal: 100.0, vertical: 50.0),
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        // date time now
-                        Container(
-                          height: 120,
-                          width: 163.0,
-                          decoration: const BoxDecoration(
-                            color: thirdColor,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(14.0),
-                            child: Stack(
-                              children: [
-                                const Icon(
-                                  Icons.calendar_today_outlined,
-                                  color: whiteColor,
-                                ),
-                                Center(
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        DateFormat.d().format(DateTime.now()),
-                                        style: myTextTheme.headlineMedium!
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        DateFormat.MMMM()
-                                            .format(DateTime.now()),
-                                        style: myTextTheme.headlineSmall!
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Container(
-                            height: 120,
-                            width: 518.0,
-                            decoration: const BoxDecoration(
-                              color: thirdColor,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(14.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Filtered by",
-                                    style: myTextTheme.titleMedium!.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: whiteColor),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      DropdownMenu(
-                                        width: 220.0,
-                                        hintText: "Period",
-                                        dropdownMenuEntries: const [
-                                          DropdownMenuEntry(
-                                              label: "Today", value: 1),
-                                        ],
-                                        onSelected: (value) {
-                                          log(value.toString());
-                                        },
-                                      ),
-                                      const SizedBox(width: 20),
-                                      DropdownMenu(
-                                        width: 220.0,
-                                        hintText: "Projects",
-                                        dropdownMenuEntries: const [
-                                          DropdownMenuEntry(
-                                              label: "Today", value: 1),
-                                        ],
-                                        onSelected: (value) {
-                                          log(value.toString());
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        // button add task
-                        Expanded(
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        children: [
+                          Expanded(
                             child: Container(
-                          height: 120,
-                          decoration: const BoxDecoration(
-                            color: thirdColor,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(20.0),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 24.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Icon(
-                                  Icons.watch_later_outlined,
+                              height: 120,
+                              decoration: const BoxDecoration(
+                                color: thirdColor,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(14.0),
+                                child: Stack(
                                   children: [
-                                    Text(
-                                      "3.00 Hours",
-                                      style: myTextTheme.headlineSmall,
+                                    const Icon(
+                                      Icons.calendar_today_outlined,
+                                      color: whiteColor,
                                     ),
-                                    Text(
-                                      "This Week",
-                                      style: myTextTheme.titleMedium!.copyWith(color: greyColor3),
+                                    Center(
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            DateFormat.d()
+                                                .format(DateTime.now()),
+                                            style: myTextTheme.headlineMedium!
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                          ),
+                                          Text(
+                                            DateFormat.MMMM()
+                                                .format(DateTime.now()),
+                                            style: myTextTheme.headlineSmall!
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: secondaryColor,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(5.0),
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: const Text('Create Task'),
-                                          content: SingleChildScrollView(
-                                            child: Column(
-                                              children: [
-                                                DropdownMenu(
-                                                  requestFocusOnTap: true,
-                                                  controller:
-                                                      _projectController,
-                                                  dropdownMenuEntries: const [
-                                                    DropdownMenuEntry(
-                                                        label: "Project1",
-                                                        value: 1),
-                                                    DropdownMenuEntry(
-                                                        label: "Project2",
-                                                        value: 2),
-                                                    DropdownMenuEntry(
-                                                        label: "Project3",
-                                                        value: 3),
-                                                    DropdownMenuEntry(
-                                                        label: "Project4",
-                                                        value: 4),
-                                                    DropdownMenuEntry(
-                                                        label: "Project5",
-                                                        value: 5),
-                                                  ],
-                                                ),
-                                                // TImestamp
-                                                const SizedBox(height: 10.0),
-                                                Row(
-                                                  children: [
-                                                    // Date
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        SizedBox(
-                                                          height: 48.0,
-                                                          width: 234.0,
-                                                          child: TextField(
-                                                            controller:
-                                                                _dateController,
-                                                            readOnly: true,
-                                                            decoration:
-                                                                const InputDecoration(
-                                                              labelText:
-                                                                  "Date Picker",
-                                                              filled: true,
-                                                              prefixIcon: Icon(Icons
-                                                                  .calendar_today_outlined),
-                                                              enabledBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide
-                                                                              .none),
-                                                              focusedBorder:
-                                                                  OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                                        color:
-                                                                            blackColor),
-                                                              ),
-                                                            ),
-                                                            onTap: () {
-                                                              _selectDate();
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(width: 10.0),
-                                                    // Duration Time
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Container(
-                                                          height: 48.0,
-                                                          width: 234.0,
-                                                          color: whiteColor,
-                                                          child: TextField(
-                                                            controller:
-                                                                _timeStartController,
-                                                            readOnly: true,
-                                                            decoration:
-                                                                const InputDecoration(
-                                                              labelText:
-                                                                  "Timepicker",
-                                                              filled: true,
-                                                              prefixIcon: Icon(Icons
-                                                                  .calendar_today_outlined),
-                                                              enabledBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide
-                                                                              .none),
-                                                              focusedBorder:
-                                                                  OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                                        color:
-                                                                            blackColor),
-                                                              ),
-                                                            ),
-                                                            onTap: () {
-                                                              displayTimePicker(
-                                                                  context);
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                                // Form title and desc task
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      vertical: 20.0),
-                                                  child: Form(
-                                                    key: _formKey,
-                                                    child: Column(
-                                                      children: [
-                                                        TextFormField(
-                                                          controller:
-                                                              _titleController,
-                                                          decoration:
-                                                              const InputDecoration(
-                                                                  border:
-                                                                      OutlineInputBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .all(
-                                                                      Radius.circular(
-                                                                          10.0),
-                                                                    ),
-                                                                  ),
-                                                                  hintText:
-                                                                      "Title Task"),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 12.0),
-                                                        TextFormField(
-                                                          maxLines: 3,
-                                                          controller:
-                                                              _descriptionController,
-                                                          decoration:
-                                                              const InputDecoration(
-                                                                  border:
-                                                                      OutlineInputBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .all(
-                                                                      Radius.circular(
-                                                                          10.0),
-                                                                    ),
-                                                                  ),
-                                                                  hintText:
-                                                                      "Description Task"),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: const Text('Submit'),
-                                              onPressed: () {
-                                                showModalBottomSheet(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return Column(
-                                                      children: [
-                                                        Text(
-                                                            "Hari: ${_dateController.text}"),
-                                                        Text(
-                                                            "Jam: ${_timeStartController.text}"),
-                                                        Text(
-                                                            "Title: ${_titleController.text}"),
-                                                        Text(
-                                                            "Description: ${_descriptionController.text}"),
-                                                        Text(
-                                                            "Project: ${_projectController.text}"),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: Text(
-                                    "Create Task",
-                                    style: myTextTheme.titleMedium!
-                                        .copyWith(color: whiteColor),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ))
-                      ],
+                          const SizedBox(width: 4.0),
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              height: 120,
+                              decoration: const BoxDecoration(
+                                color: thirdColor,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(14.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Filtered by",
+                                      style: myTextTheme.titleMedium!.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: whiteColor),
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Center(
+                                              child: DropdownMenu(
+                                                hintText: "Period",
+                                                dropdownMenuEntries: const [
+                                                  DropdownMenuEntry(
+                                                      label: "Today", value: 1),
+                                                ],
+                                                onSelected: (value) {
+                                                  log(value.toString());
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Center(
+                                              child: DropdownMenu(
+                                                hintText: "Projects",
+                                                dropdownMenuEntries: const [
+                                                  DropdownMenuEntry(
+                                                      label: "Today", value: 1),
+                                                ],
+                                                onSelected: (value) {
+                                                  log(value.toString());
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 4.0),
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              height: 120,
+                              decoration: const BoxDecoration(
+                                color: thirdColor,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14.0),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.watch_later_outlined,
+                                        size: 34.0),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "3.00 Hours",
+                                            style: myTextTheme.headlineSmall,
+                                          ),
+                                          Text(
+                                            "This Week",
+                                            style: myTextTheme.titleMedium!
+                                                .copyWith(color: greyColor3),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: secondaryColor,
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0),
+                                            ),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title:
+                                                    const Text('Create Task'),
+                                                content: SingleChildScrollView(
+                                                  child: Column(
+                                                    children: [
+                                                      // TImestamp
+
+                                                      Row(
+                                                        children: [
+                                                          // Date
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 48.0,
+                                                                width: 234.0,
+                                                                child:
+                                                                    TextField(
+                                                                  controller:
+                                                                      _dateController,
+                                                                  readOnly:
+                                                                      true,
+                                                                  decoration:
+                                                                      const InputDecoration(
+                                                                    labelText:
+                                                                        "Date Picker",
+                                                                    filled:
+                                                                        true,
+                                                                    prefixIcon:
+                                                                        Icon(Icons
+                                                                            .calendar_today_outlined),
+                                                                    enabledBorder:
+                                                                        OutlineInputBorder(
+                                                                            borderSide:
+                                                                                BorderSide.none),
+                                                                    focusedBorder:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          BorderSide(
+                                                                              color: blackColor),
+                                                                    ),
+                                                                  ),
+                                                                  onTap: () {
+                                                                    _selectDate();
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 10.0),
+                                                          // Duration Time
+                                                          Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 48.0,
+                                                                width: 234.0,
+                                                                child:
+                                                                    TextField(
+                                                                  controller:
+                                                                      _timeStartController,
+                                                                  readOnly:
+                                                                      true,
+                                                                  decoration:
+                                                                      const InputDecoration(
+                                                                    labelText:
+                                                                        "Start Time",
+                                                                    filled:
+                                                                        true,
+                                                                    prefixIcon:
+                                                                        Icon(Icons
+                                                                            .calendar_today_outlined),
+                                                                    enabledBorder:
+                                                                        OutlineInputBorder(
+                                                                            borderSide:
+                                                                                BorderSide.none),
+                                                                    focusedBorder:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          BorderSide(
+                                                                              color: blackColor),
+                                                                    ),
+                                                                  ),
+                                                                  onTap: () {
+                                                                    displayTimePicker(
+                                                                        context);
+                                                                  },
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                  width: 10.0),
+                                                              SizedBox(
+                                                                height: 48.0,
+                                                                width: 234.0,
+                                                                child:
+                                                                    TextField(
+                                                                  controller:
+                                                                      _timeEndController,
+                                                                  readOnly:
+                                                                      true,
+                                                                  decoration:
+                                                                      const InputDecoration(
+                                                                    labelText:
+                                                                        "End Time",
+                                                                    filled:
+                                                                        true,
+                                                                    prefixIcon:
+                                                                        Icon(Icons
+                                                                            .calendar_today_outlined),
+                                                                    enabledBorder:
+                                                                        OutlineInputBorder(
+                                                                            borderSide:
+                                                                                BorderSide.none),
+                                                                    focusedBorder:
+                                                                        OutlineInputBorder(
+                                                                      borderSide:
+                                                                          BorderSide(
+                                                                              color: blackColor),
+                                                                    ),
+                                                                  ),
+                                                                  onTap: () {
+                                                                    displayTimePickerEnd(
+                                                                        context);
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 10.0),
+                                                      DropdownMenu(
+                                                        width: 480,
+                                                        requestFocusOnTap: true,
+                                                        label: const Text(
+                                                            "Project Title"),
+                                                        controller:
+                                                            _projectController,
+                                                        dropdownMenuEntries: const [
+                                                          DropdownMenuEntry(
+                                                              label: "Project1",
+                                                              value: 1),
+                                                          DropdownMenuEntry(
+                                                              label: "Project2",
+                                                              value: 2),
+                                                          DropdownMenuEntry(
+                                                              label: "Project3",
+                                                              value: 3),
+                                                          DropdownMenuEntry(
+                                                              label: "Project4",
+                                                              value: 4),
+                                                          DropdownMenuEntry(
+                                                              label: "Project5",
+                                                              value: 5),
+                                                        ],
+                                                      ),
+                                                      // Form title and desc task
+                                                      const SizedBox(
+                                                          height: 10.0),
+                                                      Form(
+                                                        key: _formKey,
+                                                        child: Column(
+                                                          children: [
+                                                            TextFormField(
+                                                              controller:
+                                                                  _titleController,
+                                                              decoration:
+                                                                  const InputDecoration(
+                                                                      border:
+                                                                          OutlineInputBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10.0),
+                                                                        ),
+                                                                      ),
+                                                                      hintText:
+                                                                          "Title Task"),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 12.0),
+                                                            TextFormField(
+                                                              maxLines: 3,
+                                                              controller:
+                                                                  _descriptionController,
+                                                              decoration:
+                                                                  const InputDecoration(
+                                                                      border:
+                                                                          OutlineInputBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10.0),
+                                                                        ),
+                                                                      ),
+                                                                      hintText:
+                                                                          "Description Task"),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: const Text('Submit'),
+                                                    onPressed: () {
+                                                      showModalBottomSheet(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return Column(
+                                                            children: [
+                                                              Text(
+                                                                  "Hari: ${_dateController.text}"),
+                                                              Text(
+                                                                  "Jam: ${_timeStartController.text}"),
+                                                              Text(
+                                                                  "Title: ${_titleController.text}"),
+                                                              Text(
+                                                                  "Description: ${_descriptionController.text}"),
+                                                              Text(
+                                                                  "Project: ${_projectController.text}"),
+                                                            ],
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: Text(
+                                          "Create Task",
+                                          style: myTextTheme.titleSmall!
+                                              .copyWith(color: whiteColor),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 70.0),
+                    const SizedBox(height: 40.0),
                     Container(
-                      color: forthColor,
                       height: 500,
                       width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8.0),
+                        ),
+                        color: forthColor,
+                      ),
                       child: Center(
                         child: ListView.builder(
                           itemCount: daysOfWeek.length,
