@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_worklog/data/provider/detail__task_provider.dart';
 import 'package:flutter_worklog/data/provider/login_provider.dart';
+import 'package:flutter_worklog/data/provider/picker_provider.dart';
+import 'package:flutter_worklog/data/provider/post_data_dummy_provider.dart';
 import 'package:flutter_worklog/ui/home_screen/home_screen.dart';
 import 'package:flutter_worklog/ui/login_screen/login_screen.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => DetailTaskProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PickerProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PostDataDummyProvider(),
         ),
       ],
       child: MaterialApp(

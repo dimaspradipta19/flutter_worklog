@@ -1,8 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_worklog/data/provider/picker_provider.dart';
+import 'package:flutter_worklog/data/provider/post_data_dummy_provider.dart';
+import 'package:flutter_worklog/models/post_data_dummy_model.dart';
 import 'package:flutter_worklog/utils/styles.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../widgets/widget_appbar_homescreen.dart';
 
@@ -16,9 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _timeStartController = TextEditingController();
-  final TextEditingController _timeEndController = TextEditingController();
   final TextEditingController _projectController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
@@ -28,48 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
     _titleController.dispose();
     _descriptionController.dispose();
-    _dateController.dispose();
-    _timeStartController.dispose();
-    _timeEndController.dispose();
     _projectController.dispose();
-  }
-
-  Future<void> displayTimePicker(BuildContext context) async {
-    var timeStart =
-        await showTimePicker(context: context, initialTime: TimeOfDay.now());
-
-    if (timeStart != null) {
-      setState(() {
-        _timeStartController.text = "${timeStart.hour}:${timeStart.minute}";
-      });
-    }
-  }
-
-  Future<void> displayTimePickerEnd(BuildContext context) async {
-    var timeEnd =
-        await showTimePicker(context: context, initialTime: TimeOfDay.now());
-
-    if (timeEnd != null) {
-      setState(() {
-        _timeEndController.text = "${timeEnd.hour}:${timeEnd.minute}";
-      });
-    }
-  }
-
-  Future<void> _selectDate() async {
-    DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now().subtract(
-          const Duration(days: 1),
-        ),
-        lastDate: DateTime.now());
-
-    if (picked != null) {
-      setState(() {
-        _dateController.text = picked.toString().split(" ")[0];
-      });
-    }
   }
 
   List<String> daysOfWeek = [
@@ -257,6 +217,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                       onPressed: () {
+                                        var pickerProvider =
+                                            Provider.of<PickerProvider>(context,
+                                                listen: false);
                                         showDialog(
                                           context: context,
                                           builder: (context) {
@@ -274,7 +237,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           width: 234.0,
                                                           child: TextField(
                                                             controller:
-                                                                _dateController,
+                                                                pickerProvider
+                                                                    .dateController,
                                                             readOnly: true,
                                                             decoration:
                                                                 const InputDecoration(
@@ -297,7 +261,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               ),
                                                             ),
                                                             onTap: () {
-                                                              _selectDate();
+                                                              // _selectDate();
+                                                              pickerProvider
+                                                                  .selectDate(
+                                                                      context);
                                                             },
                                                           ),
                                                         ),
@@ -314,7 +281,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               width: 234.0 / 2,
                                                               child: TextField(
                                                                 controller:
-                                                                    _timeStartController,
+                                                                    pickerProvider
+                                                                        .timeStartController,
                                                                 readOnly: true,
                                                                 decoration:
                                                                     const InputDecoration(
@@ -337,8 +305,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   ),
                                                                 ),
                                                                 onTap: () {
-                                                                  displayTimePicker(
-                                                                      context);
+                                                                  // displayTimePicker(
+                                                                  //     context);
+
+                                                                  pickerProvider
+                                                                      .displayTimePicker(
+                                                                          context);
                                                                 },
                                                               ),
                                                             ),
@@ -349,7 +321,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               width: 234.0 / 2,
                                                               child: TextField(
                                                                 controller:
-                                                                    _timeEndController,
+                                                                    pickerProvider
+                                                                        .timeEndController,
                                                                 readOnly: true,
                                                                 decoration:
                                                                     const InputDecoration(
@@ -372,8 +345,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   ),
                                                                 ),
                                                                 onTap: () {
-                                                                  displayTimePickerEnd(
-                                                                      context);
+                                                                  // displayTimePickerEnd(
+                                                                  //     context);
+
+                                                                  pickerProvider
+                                                                      .displayTimePickerEnd(
+                                                                          context);
                                                                 },
                                                               ),
                                                             ),
@@ -461,7 +438,45 @@ class _HomeScreenState extends State<HomeScreen> {
                                               actions: <Widget>[
                                                 TextButton(
                                                   child: const Text('Submit'),
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    var providerData = Provider
+                                                        .of<PostDataDummyProvider>(
+                                                            context,
+                                                            listen: false);
+
+                                                    PostDataDummyModel
+                                                        dataModel =
+                                                        PostDataDummyModel(
+                                                      date: pickerProvider
+                                                          .dateController.text,
+                                                      timeStart: pickerProvider
+                                                          .timeStartController
+                                                          .text,
+                                                      timeEnd: pickerProvider
+                                                          .timeEndController
+                                                          .text,
+                                                      projectName:
+                                                          _projectController
+                                                              .text,
+                                                      titleWorklog:
+                                                          _titleController.text,
+                                                      descriptionWorklog:
+                                                          _descriptionController
+                                                              .text,
+                                                    );
+
+                                                    providerData.addDataWorklog(
+                                                        dataModel);
+
+                                                    log(pickerProvider
+                                                        .dateController.text);
+                                                    log(pickerProvider
+                                                        .timeEndController
+                                                        .text);
+                                                    log(pickerProvider
+                                                        .timeStartController
+                                                        .text);
+                                                  },
                                                 ),
                                               ],
                                             );
@@ -513,275 +528,274 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Text(daysOfWeek[indexDay]),
                                     SizedBox(
                                       width: 200.0,
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: indexDay + 1,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        padding: EdgeInsets.zero,
-                                        itemBuilder: (context, indexCard) {
-                                          return InkWell(
-                                            onTap: () {
-                                              log("index card $indexCard");
-                                              log("index day $indexDay");
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return Center(
-                                                    child: Container(
-                                                      height: 600,
-                                                      width: 600,
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                        color: whiteColor,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(6.0),
-                                                        ),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(30.0),
-                                                        child: Column(
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
+                                      child: Consumer<PostDataDummyProvider>(
+                                        builder:
+                                            (context, valuePostData, child) {
+                                          return ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: valuePostData
+                                                .dataWorklog.length,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            padding: EdgeInsets.zero,
+                                            itemBuilder: (context, indexCard) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return Center(
+                                                        child: Container(
+                                                          height: 600,
+                                                          width: 600,
+                                                          decoration:
+                                                              const BoxDecoration(
+                                                            color: whiteColor,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  6.0),
+                                                            ),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(30.0),
+                                                            child: Column(
                                                               children: [
-                                                                Text(
-                                                                  "Detail Task",
-                                                                  style: myTextTheme
-                                                                      .headlineSmall!
-                                                                      .copyWith(
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Text(
+                                                                      "Detail Task",
+                                                                      style: myTextTheme.headlineSmall!.copyWith(
                                                                           fontSize:
                                                                               20.0,
                                                                           fontWeight:
                                                                               FontWeight.bold),
-                                                                ),
-                                                                IconButton(
-                                                                  onPressed:
-                                                                      () {},
-                                                                  icon:
-                                                                      const Icon(
-                                                                    Icons
-                                                                        .cancel_outlined,
-                                                                    size: 24.0,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            const Padding(
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
-                                                                vertical: 20.0,
-                                                              ),
-                                                              child: Divider(
-                                                                  color:
-                                                                      blackColor),
-                                                            ),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Text(
-                                                                  "Meeting OCTO FRIENDS ${daysOfWeek[indexDay]}",
-                                                                  style: myTextTheme
-                                                                      .titleLarge!
-                                                                      .copyWith(
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                ),
-                                                                Container(
-                                                                  height: 32,
-                                                                  decoration: const BoxDecoration(
-                                                                      color:
-                                                                          thirdColor,
-                                                                      borderRadius:
-                                                                          BorderRadius.all(
-                                                                              Radius.circular(10.0))),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .symmetric(
-                                                                        horizontal:
-                                                                            18.0),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        const Icon(
-                                                                          Icons
-                                                                              .push_pin_outlined,
-                                                                          size:
-                                                                              20.0,
-                                                                        ),
-                                                                        const SizedBox(
-                                                                            width:
-                                                                                4.0),
-                                                                        Text(
-                                                                          "OCTO FRIENDS",
-                                                                          style: myTextTheme
-                                                                              .titleLarge!
-                                                                              .copyWith(fontWeight: FontWeight.bold),
-                                                                        ),
-                                                                      ],
                                                                     ),
-                                                                  ),
+                                                                    IconButton(
+                                                                      onPressed:
+                                                                          () {},
+                                                                      icon:
+                                                                          const Icon(
+                                                                        Icons
+                                                                            .cancel_outlined,
+                                                                        size:
+                                                                            24.0,
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
-                                                              ],
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
+                                                                const Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .symmetric(
+                                                                    vertical:
+                                                                        20.0,
+                                                                  ),
+                                                                  child: Divider(
+                                                                      color:
+                                                                          blackColor),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Text(
+                                                                      "Meeting OCTO FRIENDS ${daysOfWeek[indexDay]}",
+                                                                      style: myTextTheme
+                                                                          .titleLarge!
+                                                                          .copyWith(
+                                                                              fontWeight: FontWeight.bold),
+                                                                    ),
+                                                                    Container(
+                                                                      height:
+                                                                          32,
+                                                                      decoration: const BoxDecoration(
+                                                                          color:
+                                                                              thirdColor,
+                                                                          borderRadius:
+                                                                              BorderRadius.all(Radius.circular(10.0))),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.symmetric(horizontal: 18.0),
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            const Icon(
+                                                                              Icons.push_pin_outlined,
+                                                                              size: 20.0,
+                                                                            ),
+                                                                            const SizedBox(width: 4.0),
+                                                                            Text(
+                                                                              "OCTO FRIENDS",
+                                                                              style: myTextTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets
                                                                           .symmetric(
                                                                       vertical:
                                                                           16.0),
-                                                              child: Text(
-                                                                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy",
-                                                                maxLines: 3,
+                                                                  child: Text(
+                                                                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy",
+                                                                    maxLines: 3,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    style: myTextTheme.bodyMedium!.copyWith(
+                                                                        fontSize:
+                                                                            15.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Image.asset(
+                                                                      "assets/images/logo_avatar.png",
+                                                                      height:
+                                                                          48.0,
+                                                                    ),
+                                                                    const SizedBox(
+                                                                        width:
+                                                                            15.0),
+                                                                    Text(
+                                                                      "Nama User",
+                                                                      style: myTextTheme
+                                                                          .bodyLarge!
+                                                                          .copyWith(
+                                                                              fontWeight: FontWeight.w600),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                const SizedBox(
+                                                                    height:
+                                                                        20.0),
+                                                                Row(
+                                                                  children: [
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Text(
+                                                                          "Date",
+                                                                          style: myTextTheme
+                                                                              .bodyMedium!
+                                                                              .copyWith(fontWeight: FontWeight.w600),
+                                                                        ),
+                                                                        Text(
+                                                                          "22/01/2024",
+                                                                          style:
+                                                                              myTextTheme.bodyMedium,
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    const SizedBox(
+                                                                        width:
+                                                                            20.0),
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Text(
+                                                                          "Duration Hour",
+                                                                          style: myTextTheme
+                                                                              .bodyMedium!
+                                                                              .copyWith(fontWeight: FontWeight.w600),
+                                                                        ),
+                                                                        Text(
+                                                                          "09.00 - 11.00",
+                                                                          style:
+                                                                              myTextTheme.bodyMedium,
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                child: Container(
+                                                  width: 200,
+                                                  color: yellowColor1,
+                                                  margin: const EdgeInsets.only(
+                                                      top: 10),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        const Expanded(
+                                                          child: Icon(Icons
+                                                              .check_circle_outline_outlined),
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 10.0),
+                                                        Expanded(
+                                                          flex: 4,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                valuePostData
+                                                                    .dataWorklog[
+                                                                        indexCard]
+                                                                    .projectName,
+                                                                maxLines: 2,
                                                                 overflow:
                                                                     TextOverflow
                                                                         .ellipsis,
                                                                 style: myTextTheme
                                                                     .bodyMedium!
                                                                     .copyWith(
-                                                                        fontSize:
-                                                                            15.0,
                                                                         fontWeight:
-                                                                            FontWeight.w500),
+                                                                            FontWeight.w600),
                                                               ),
-                                                            ),
-                                                            Row(
-                                                              children: [
-                                                                Image.asset(
-                                                                  "assets/images/logo_avatar.png",
-                                                                  height: 48.0,
-                                                                ),
-                                                                const SizedBox(
-                                                                    width:
-                                                                        15.0),
-                                                                Text(
-                                                                  "Nama User",
-                                                                  style: myTextTheme
-                                                                      .bodyLarge!
-                                                                      .copyWith(
-                                                                          fontWeight:
-                                                                              FontWeight.w600),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 20.0),
-                                                            Row(
-                                                              children: [
-                                                                Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Text(
-                                                                      "Date",
-                                                                      style: myTextTheme
-                                                                          .bodyMedium!
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.w600),
-                                                                    ),
-                                                                    Text(
-                                                                      "22/01/2024",
-                                                                      style: myTextTheme
-                                                                          .bodyMedium,
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                const SizedBox(
-                                                                    width:
-                                                                        20.0),
-                                                                Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Text(
-                                                                      "Duration Hour",
-                                                                      style: myTextTheme
-                                                                          .bodyMedium!
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.w600),
-                                                                    ),
-                                                                    Text(
-                                                                      "09.00 - 11.00",
-                                                                      style: myTextTheme
-                                                                          .bodyMedium,
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
+                                                              Text(
+                                                                "${valuePostData.dataWorklog[indexCard].timeStart} - ${valuePostData.dataWorklog[indexCard].timeEnd}",
+                                                                style: myTextTheme
+                                                                    .bodyMedium!
+                                                                    .copyWith(
+                                                                        fontWeight:
+                                                                            FontWeight.w400),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
+                                                      ],
                                                     ),
-                                                  );
-                                                },
+                                                  ),
+                                                ),
                                               );
                                             },
-                                            child: Container(
-                                              width: 200,
-                                              color: yellowColor1,
-                                              margin: const EdgeInsets.only(
-                                                  top: 10),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    const Expanded(
-                                                      child: Icon(Icons
-                                                          .check_circle_outline_outlined),
-                                                    ),
-                                                    const SizedBox(width: 10.0),
-                                                    Expanded(
-                                                      flex: 4,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            "Meeting Octo ${daysOfWeek[indexDay]}",
-                                                            maxLines: 2,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: myTextTheme
-                                                                .bodyMedium!
-                                                                .copyWith(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600),
-                                                          ),
-                                                          Text(
-                                                            "09.00 - 11.00",
-                                                            style: myTextTheme
-                                                                .bodyMedium!
-                                                                .copyWith(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
                                           );
                                         },
                                       ),
