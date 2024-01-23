@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_worklog/data/provider/detail__task_provider.dart';
 import 'package:flutter_worklog/data/provider/login_provider.dart';
 import 'package:flutter_worklog/ui/home_screen/home_screen.dart';
 import 'package:flutter_worklog/ui/login_screen/login_screen.dart';
@@ -18,9 +19,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => LoginProvider(),
         ),
-        // ChangeNotifierProvider(
-        //   create: (context) => LoginProvider(),
-        // ),
+        ChangeNotifierProvider(
+          create: (context) => DetailTaskProvider(),
+        ),
       ],
       child: MaterialApp(
         title: 'WorkLog App',

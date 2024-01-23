@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../utils/styles.dart';
-
 class WidgetLeftSideLoginScreen extends StatelessWidget {
   const WidgetLeftSideLoginScreen({
     super.key,
