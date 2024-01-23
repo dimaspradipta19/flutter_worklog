@@ -10,18 +10,11 @@ class WidgetLeftSideLoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Stack(
-        children: [
-          Container(
-            color: primaryColor,
-          ),
-          Center(
-            child: Image.asset(
-              "assets/images/logo_worklog.png",
-              height: 100.0,
-            ),
-          ),
-        ],
+      child: Image.asset(
+        "assets/images/logo_login_screen.png",
+        width: MediaQuery.of(context).size.width,
+        fit: BoxFit.fitWidth,
+        // height: 100.0,
       ),
     );
   }

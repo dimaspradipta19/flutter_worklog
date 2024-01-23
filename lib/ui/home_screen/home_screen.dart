@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_worklog/utils/styles.dart';
 import 'package:intl/intl.dart';
 
+import '../../widgets/widget_appbar_homescreen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -12,9 +14,49 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  // final _formKey = GlobalKey<FormState>();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _dateController.dispose();
+    _timeController.dispose();
+  }
+
+  Future displayTimePicker(BuildContext context) async {
+    var time =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+
+    if (time != null) {
+      setState(() {
+        _timeController.text = "${time.hour}:${time.minute}";
+      });
+    }
+  }
+
+  Future<void> _selectDate() async {
+    DateTime? _picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now().subtract(
+          const Duration(days: 1),
+        ),
+        lastDate: DateTime.now());
+
+    if (_picked != null) {
+      setState(() {
+        _dateController.text = _picked.toString().split(" ")[0];
+      });
+    }
+  }
+
   List<String> daysOfWeek = [
     'Monday',
     'Tuesday',
@@ -24,13 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'Saturday',
     'Sunday',
   ];
-
-  @override
-  void dispose() {
-    super.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,8 +177,187 @@ class _HomeScreenState extends State<HomeScreen> {
                         Expanded(child: Container()),
                         // button add task
                         ElevatedButton(
-                          onPressed: () {},
-                          child: const Text("Add Task"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: secondaryColor,
+                            fixedSize: const Size(150.0, 48.0),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5.0),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Create Task'),
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        DropdownMenu(
+                                          requestFocusOnTap: true,
+                                          dropdownMenuEntries: const [
+                                            DropdownMenuEntry(
+                                                label: "Project1", value: 1),
+                                            DropdownMenuEntry(
+                                                label: "Project2", value: 2),
+                                            DropdownMenuEntry(
+                                                label: "Project3", value: 3),
+                                            DropdownMenuEntry(
+                                                label: "Project4", value: 4),
+                                            DropdownMenuEntry(
+                                                label: "Project5", value: 5),
+                                          ],
+                                          onSelected: (value) {
+                                            log(value.toString());
+                                          },
+                                        ),
+                                        // TImestamp
+                                        Row(
+                                          children: [
+                                            // Date
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  height: 48.0,
+                                                  width: 234.0,
+                                                  child: TextField(
+                                                    controller: _dateController,
+                                                    readOnly: true,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                      labelText: "DATE",
+                                                      filled: true,
+                                                      prefixIcon: Icon(Icons
+                                                          .calendar_today_outlined),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide
+                                                                      .none),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: blackColor),
+                                                      ),
+                                                    ),
+                                                    onTap: () {
+                                                      _selectDate();
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(width: 10.0),
+                                            // Duration
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text("Duration Hour"),
+                                                Container(
+                                                  height: 48.0,
+                                                  width: 234.0,
+                                                  color: whiteColor,
+                                                  // child: TextField(
+                                                  //   controller: _dateController,
+                                                  //   readOnly: true,
+                                                  //   decoration:
+                                                  //       const InputDecoration(
+                                                  //     labelText: "Timepicker",
+                                                  //     filled: true,
+                                                  //     prefixIcon: Icon(Icons
+                                                  //         .calendar_today_outlined),
+                                                  //     enabledBorder:
+                                                  //         OutlineInputBorder(
+                                                  //             borderSide:
+                                                  //                 BorderSide
+                                                  //                     .none),
+                                                  //     focusedBorder:
+                                                  //         OutlineInputBorder(
+                                                  //       borderSide: BorderSide(
+                                                  //           color: blackColor),
+                                                  //     ),
+                                                  //   ),
+                                                  //   onTap: () {
+                                                  //     displayTimePicker(context);
+                                                  //   },
+                                                  // ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        // Form title and desc task
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 20.0),
+                                          child: Form(
+                                            key: _formKey,
+                                            child: Column(
+                                              children: [
+                                                TextFormField(
+                                                  controller: _titleController,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  10.0),
+                                                            ),
+                                                          ),
+                                                          hintText:
+                                                              "Title Task"),
+                                                ),
+                                                const SizedBox(height: 12.0),
+                                                TextFormField(
+                                                  maxLines: 3,
+                                                  controller:
+                                                      _descriptionController,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  10.0),
+                                                            ),
+                                                          ),
+                                                          hintText:
+                                                              "Description Task"),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('Submit'),
+                                      onPressed: () {
+                                        print(_dateController.text);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Text(
+                            "Create Task",
+                            style: myTextTheme.titleMedium!
+                                .copyWith(color: whiteColor),
+                          ),
                         ),
                       ],
                     ),
@@ -156,7 +370,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListView.builder(
                           itemCount: daysOfWeek.length,
                           shrinkWrap: true,
-                          // physics: const NeverScrollableScrollPhysics(),
                           scrollDirection: Axis.horizontal,
                           padding: EdgeInsets.zero,
                           itemBuilder: (context, indexDay) {
@@ -172,18 +385,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: ListView.builder(
                                         shrinkWrap: true,
                                         itemCount: indexDay + 1,
-                                        physics: NeverScrollableScrollPhysics(),
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
                                         padding: EdgeInsets.zero,
                                         itemBuilder: (context, indexCard) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(20.0),
-                                            child: Container(
-                                              height: indexCard.isEven
-                                                  ? 20 + indexCard.toDouble() * 20
-                                                  : 20,
-                                              width: 200,
-                                              color: yellowColor1,
-                                              child: Text(indexCard.toString()),
+                                          return InkWell(
+                                            onTap: () {},
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
+                                              child: Container(
+                                                height: indexCard.isEven
+                                                    ? 20 +
+                                                        indexCard.toDouble() *
+                                                            20
+                                                    : 20,
+                                                width: 200,
+                                                color: yellowColor1,
+                                                child:
+                                                    Text(indexCard.toString()),
+                                              ),
                                             ),
                                           );
                                         },
@@ -204,63 +425,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class AppbarHomePage extends StatelessWidget {
-  const AppbarHomePage({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Image.asset(
-          "assets/images/logo_worklog.png",
-          height: 66.0,
-          width: 64.0,
-        ),
-        const SizedBox(width: 16.0),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Hi, User",
-              style:
-                  myTextTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4.0),
-            Text(
-              "Create & Make Daily Task",
-              style:
-                  myTextTheme.bodySmall!.copyWith(fontWeight: FontWeight.w400),
-            ),
-          ],
-        ),
-        Expanded(child: Container()),
-        Image.asset(
-          "assets/images/logo_avatar.png",
-          width: 48.0,
-          height: 48.0,
-        ),
-        const SizedBox(width: 16.0),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "User 1",
-              style:
-                  myTextTheme.titleLarge!.copyWith(fontWeight: FontWeight.w600),
-            ),
-            Text(
-              "Developer",
-              style: myTextTheme.titleSmall,
-            ),
-          ],
-        )
-      ],
     );
   }
 }
