@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final detailTaskModel = detailTaskModelFromJson(jsonString);
+
 import 'dart:convert';
 
 DetailTaskModel detailTaskModelFromJson(String str) => DetailTaskModel.fromJson(json.decode(str));
@@ -74,6 +78,7 @@ class Worklog {
     String logEnd;
     DateTime logDate;
     String logDetails;
+    String logTitle;
     int userId;
     Project project;
 
@@ -83,6 +88,7 @@ class Worklog {
         required this.logEnd,
         required this.logDate,
         required this.logDetails,
+        required this.logTitle,
         required this.userId,
         required this.project,
     });
@@ -93,6 +99,7 @@ class Worklog {
         logEnd: json["logEnd"],
         logDate: DateTime.parse(json["logDate"]),
         logDetails: json["logDetails"],
+        logTitle: json["logTitle"],
         userId: json["userId"],
         project: Project.fromJson(json["project"]),
     );
@@ -103,6 +110,7 @@ class Worklog {
         "logEnd": logEnd,
         "logDate": logDate.toIso8601String(),
         "logDetails": logDetails,
+        "logTitle": logTitle,
         "userId": userId,
         "project": project.toJson(),
     };

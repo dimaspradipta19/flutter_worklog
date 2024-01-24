@@ -28,6 +28,8 @@ class DetailTaskService {
     }
   }
 
+  
+
   _handleError(error) {
     String errorDesc = "";
     DioException dioError = error as DioException;

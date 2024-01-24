@@ -1,161 +1,186 @@
 {
-    "userId": 1,
-    "username": "martin27",
-    "fullName": "Martin Christian",
-    "worklogs": [
-      {
-        "logId": 5,
-        "logStart": "13:00:00",
-        "logEnd": "15:00:00",
-        "logDate": "2024-01-21T00:00:00",
-        "logDetails": "Memperbaiki tiket BUG-999",
-        "userId": 1,
-        "project": {
-          "projectId": 2,
-          "projectName": "EDP"
-        }
-      },    
-      {
-        "logId": 10,
-        "logStart": "15:00:00",
-        "logEnd": "17:00:00",
-        "logDate": "2024-01-21T00:00:00",
-        "logDetails": "Memperbaiki tiket lain-lain",
-        "userId": 1,
-        "project": {
-          "projectId": 2,
-          "projectName": "EDP"
-        }
-      },
-      {
-        "logId": 9,
-        "logStart": "14:30:00",
-        "logEnd": "16:30:00",
-        "logDate": "2024-01-21T00:00:00",
-        "logDetails": "Memperbaiki tiket lain-lain",
-        "userId": 1,
-        "project": {
-          "projectId": 2,
-          "projectName": "EDP"
-        }
-      },
-      {
-        "logId": 8,
-        "logStart": "14:00:00",
-        "logEnd": "16:00:00",
-        "logDate": "2024-01-21T00:00:00",
-        "logDetails": "Memperbaiki tiket lain-lain",
-        "userId": 1,
-        "project": {
-          "projectId": 2,
-          "projectName": "EDP"
-        }
-      },
-      {
-        "logId": 7,
-        "logStart": "13:30:00",
-        "logEnd": "15:30:00",
-        "logDate": "2024-01-21T00:00:00",
-        "logDetails": "Memperbaiki tiket lain-lain",
-        "userId": 1,
-        "project": {
-          "projectId": 2,
-          "projectName": "EDP"
-        }
-      },
-      {
-        "logId": 6,
-        "logStart": "13:00:00",
-        "logEnd": "15:00:00",
-        "logDate": "2024-01-21T00:00:00",
-        "logDetails": "Memperbaiki tiket BUG-999",
-        "userId": 1,
-        "project": {
-          "projectId": 2,
-          "projectName": "EDP"
-        }
-      },
-      {
-        "logId": 1,
-        "logStart": "19:00:00",
-        "logEnd": "20:00:00",
-        "logDate": "2024-01-22T00:00:00",
-        "logDetails": "Meeting project MADAM bersama andhika",
-        "userId": 1,
-        "project": {
-          "projectId": 1,
-          "projectName": "MADAM"
-        }
-      },
-      {
-        "logId": 2,
-        "logStart": "12:00:00",
-        "logEnd": "15:00:00",
-        "logDate": "2024-01-23T00:00:00",
-        "logDetails": "Fixing Ticket BUG-001",
-        "userId": 1,
-        "project": {
-          "projectId": 3,
-          "projectName": "ARJUNA"
-        }
-      },
-      {
-        "logId": 15,
-        "logStart": "16:00:00",
-        "logEnd": "18:00:00",
-        "logDate": "2024-01-23T00:00:00",
-        "logDetails": "Membuat TASK-004",
-        "userId": 1,
-        "project": {
-          "projectId": 1,
-          "projectName": "MADAM"
-        }
-      },
-      {
-        "logId": 14,
-        "logStart": "17:00:00",
-        "logEnd": "18:00:00",
-        "logDate": "2024-01-23T00:00:00",
-        "logDetails": "Membuat TASK-003",
-        "userId": 1,
-        "project": {
-          "projectId": 2,
-          "projectName": "EDP"
-        }
-      },
-      {
-        "logId": 13,
-        "logStart": "15:00:00",
-        "logEnd": "18:00:00",
-        "logDate": "2024-01-23T00:00:00",
-        "logDetails": "Membuat TASK-002",
-        "userId": 1,
-        "project": {
-          "projectId": 1,
-          "projectName": "MADAM"
-        }
-      },
-      {
-        "logId": 12,
-        "logStart": "13:00:00",
-        "logEnd": "14:00:00",
-        "logDate": "2024-01-23T00:00:00",
-        "logDetails": "Membuat Task TASK-001",
-        "userId": 1,
-        "project": {
-          "projectId": 2,
-          "projectName": "EDP"
-        }
-      }
-    ],
-    "projects": [
-      {
+  "userId": 1,
+  "username": "martin27",
+  "fullName": "Martin Christian",
+  "worklogs": [
+    {
+      "logId": 19,
+      "logStart": "09:00:00",
+      "logEnd": "11:30:00",
+      "logDate": "2024-01-24T00:00:00",
+      "logDetails": "Developing new feature for module A",
+      "logTitle": "Feature Implementation",
+      "userId": 1,
+      "project": {
         "projectId": 2,
         "projectName": "EDP"
-      },
-      {
+      }
+    },
+    {
+      "logId": 28,
+      "logStart": "13:30:00",
+      "logEnd": "15:00:00",
+      "logDate": "2024-01-24T00:00:00",
+      "logDetails": "Refactoring code for better performance",
+      "logTitle": "Code Refactoring",
+      "userId": 1,
+      "project": {
+        "projectId": 3,
+        "projectName": "ARJUNA"
+      }
+    },
+    {
+      "logId": 30,
+      "logStart": "15:30:00",
+      "logEnd": "17:45:00",
+      "logDate": "2024-01-24T00:00:00",
+      "logDetails": "Reviewing code for PR #56",
+      "logTitle": "Code Review",
+      "userId": 1,
+      "project": {
+        "projectId": 3,
+        "projectName": "ARJUNA"
+      }
+    },
+    {
+      "logId": 20,
+      "logStart": "14:45:00",
+      "logEnd": "17:15:00",
+      "logDate": "2024-01-24T00:00:00",
+      "logDetails": "Reviewing code for PR #56",
+      "logTitle": "Code Review",
+      "userId": 1,
+      "project": {
+        "projectId": 3,
+        "projectName": "ARJUNA"
+      }
+    },
+    {
+      "logId": 29,
+      "logStart": "10:00:00",
+      "logEnd": "12:00:00",
+      "logDate": "2024-01-24T00:00:00",
+      "logDetails": "Developing new feature for module A",
+      "logTitle": "Feature Implementation",
+      "userId": 1,
+      "project": {
+        "projectId": 2,
+        "projectName": "EDP"
+      }
+    },
+    {
+      "logId": 22,
+      "logStart": "16:00:00",
+      "logEnd": "18:30:00",
+      "logDate": "2024-01-25T00:00:00",
+      "logDetails": "Researching new API integration methods",
+      "logTitle": "API Research",
+      "userId": 1,
+      "project": {
+        "projectId": 2,
+        "projectName": "EDP"
+      }
+    },
+    {
+      "logId": 31,
+      "logStart": "09:45:00",
+      "logEnd": "11:15:00",
+      "logDate": "2024-01-25T00:00:00",
+      "logDetails": "Attending project meeting",
+      "logTitle": "Project Meeting",
+      "userId": 1,
+      "project": {
         "projectId": 1,
         "projectName": "MADAM"
       }
-    ]
-  }
+    },
+    {
+      "logId": 25,
+      "logStart": "11:00:00",
+      "logEnd": "12:30:00",
+      "logDate": "2024-01-26T00:00:00",
+      "logDetails": "Preparing presentation for client meeting",
+      "logTitle": "Client Meeting Preparation",
+      "userId": 1,
+      "project": {
+        "projectId": 2,
+        "projectName": "EDP"
+      }
+    },
+    {
+      "logId": 34,
+      "logStart": "08:30:00",
+      "logEnd": "09:45:00",
+      "logDate": "2024-01-26T00:00:00",
+      "logDetails": "Writing unit tests for new code",
+      "logTitle": "Unit Testing",
+      "userId": 1,
+      "project": {
+        "projectId": 1,
+        "projectName": "MADAM"
+      }
+    },
+    {
+      "logId": 24,
+      "logStart": "08:45:00",
+      "logEnd": "10:15:00",
+      "logDate": "2024-01-26T00:00:00",
+      "logDetails": "Writing unit tests for new code",
+      "logTitle": "Unit Testing",
+      "userId": 1,
+      "project": {
+        "projectId": 3,
+        "projectName": "ARJUNA"
+      }
+    },
+    {
+      "logId": 35,
+      "logStart": "10:45:00",
+      "logEnd": "12:15:00",
+      "logDate": "2024-01-26T00:00:00",
+      "logDetails": "Preparing presentation for client meeting",
+      "logTitle": "Client Meeting Preparation",
+      "userId": 1,
+      "project": {
+        "projectId": 2,
+        "projectName": "EDP"
+      }
+    },
+    {
+      "logId": 27,
+      "logStart": "09:45:00",
+      "logEnd": "11:15:00",
+      "logDate": "2024-01-27T00:00:00",
+      "logDetails": "Reviewing user feedback on new feature",
+      "logTitle": "User Feedback Review",
+      "userId": 1,
+      "project": {
+        "projectId": 1,
+        "projectName": "MADAM"
+      }
+    },
+    {
+      "logId": 37,
+      "logStart": "16:45:00",
+      "logEnd": "18:15:00",
+      "logDate": "2024-01-27T00:00:00",
+      "logDetails": "Troubleshooting performance issue",
+      "logTitle": "Performance Troubleshooting",
+      "userId": 1,
+      "project": {
+        "projectId": 2,
+        "projectName": "EDP"
+      }
+    }
+  ],
+  "projects": [
+    {
+      "projectId": 2,
+      "projectName": "EDP"
+    },
+    {
+      "projectId": 1,
+      "projectName": "MADAM"
+    }
+  ]
+}
