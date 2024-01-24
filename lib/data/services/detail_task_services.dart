@@ -1,19 +1,24 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_worklog/models/detail_task_model.dart';
 
 class DetailTaskService {
-  final baseUrl = "";
-  final apiKey = "";
-  final Dio _dio = Dio();
+  // final baseUrl = "";
+  // final apiKey = "";
+  // final Dio _dio = Dio();
 
-  Future<DetailTaskModel?> getDetailTask() async {
+  Future<DetailTaskModel> getDetailTask() async {
     try {
-      var response = await _dio.get(baseUrl);
+      // var response = await _dio.get(baseUrl);
 
-      if (response.statusCode == 200) {
-        var resultLogin = DetailTaskModel.fromJson(response.data);
+      final String response =
+          await rootBundle.loadString('assets/dataTask.json');
+
+      if (response.isNotEmpty) {
+        var resultLogin = DetailTaskModel.fromJson(json.decode(response));
         return resultLogin;
       } else {
         return _handleError(response);

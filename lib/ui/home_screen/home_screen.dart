@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_worklog/data/provider/detail__task_provider.dart';
 import 'package:flutter_worklog/data/provider/picker_provider.dart';
 import 'package:flutter_worklog/data/provider/post_data_dummy_provider.dart';
 import 'package:flutter_worklog/models/post_data_dummy_model.dart';
+import 'package:flutter_worklog/utils/enum.dart';
 import 'package:flutter_worklog/utils/styles.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -40,8 +43,159 @@ class _HomeScreenState extends State<HomeScreen> {
     'Friday',
   ];
 
+  Map<String, List<dynamic>> groupWorklogsByDate(String jsonData) {
+    Map<String, List<dynamic>> groupedWorklogs = {};
+
+    Map<String, dynamic> data = json.decode(jsonData);
+
+    List<dynamic> worklogs = data['worklogs'];
+    for (int i = 0; i < worklogs.length; i++) {
+      String logDate = worklogs[i]['logDate'];
+
+      if (groupedWorklogs.containsKey(logDate)) {
+        groupedWorklogs[logDate]?.add(worklogs[i]);
+      } else {
+        groupedWorklogs[logDate] = [worklogs[i]];
+      }
+    }
+
+    return groupedWorklogs;
+  }
+
+  final jsonData = '''
+   {
+    "userId": 1,
+    "username": "martin27",
+    "fullName": "Martin Christian",
+    "worklogs": [
+      {
+        "logId": 5,
+        "logStart": "13:00:00",
+        "logEnd": "15:00:00",
+        "logDate": "2024-01-21T00:00:00",
+        "logDetails": "Memperbaiki tiket BUG-999",
+        "userId": 1,
+        "project": {"projectId": 2, "projectName": "EDP"}
+      },
+      {
+        "logId": 10,
+        "logStart": "15:00:00",
+        "logEnd": "17:00:00",
+        "logDate": "2024-01-21T00:00:00",
+        "logDetails": "Memperbaiki tiket lain-lain",
+        "userId": 1,
+        "project": {"projectId": 2, "projectName": "EDP"}
+      },
+      {
+        "logId": 9,
+        "logStart": "14:30:00",
+        "logEnd": "16:30:00",
+        "logDate": "2024-01-21T00:00:00",
+        "logDetails": "Memperbaiki tiket lain-lain",
+        "userId": 1,
+        "project": {"projectId": 2, "projectName": "EDP"}
+      },
+      {
+        "logId": 8,
+        "logStart": "14:00:00",
+        "logEnd": "16:00:00",
+        "logDate": "2024-01-21T00:00:00",
+        "logDetails": "Memperbaiki tiket lain-lain",
+        "userId": 1,
+        "project": {"projectId": 2, "projectName": "EDP"}
+      },
+      {
+        "logId": 7,
+        "logStart": "13:30:00",
+        "logEnd": "15:30:00",
+        "logDate": "2024-01-21T00:00:00",
+        "logDetails": "Memperbaiki tiket lain-lain",
+        "userId": 1,
+        "project": {"projectId": 2, "projectName": "EDP"}
+      },
+      {
+        "logId": 6,
+        "logStart": "13:00:00",
+        "logEnd": "15:00:00",
+        "logDate": "2024-01-21T00:00:00",
+        "logDetails": "Memperbaiki tiket BUG-999",
+        "userId": 1,
+        "project": {"projectId": 2, "projectName": "EDP"}
+      },
+      {
+        "logId": 1,
+        "logStart": "19:00:00",
+        "logEnd": "20:00:00",
+        "logDate": "2024-01-22T00:00:00",
+        "logDetails": "Meeting project MADAM bersama andhika",
+        "userId": 1,
+        "project": {"projectId": 1, "projectName": "MADAM"}
+      },
+      {
+        "logId": 2,
+        "logStart": "12:00:00",
+        "logEnd": "15:00:00",
+        "logDate": "2024-01-23T00:00:00",
+        "logDetails": "Fixing Ticket BUG-001",
+        "userId": 1,
+        "project": {"projectId": 3, "projectName": "ARJUNA"}
+      },
+      {
+        "logId": 15,
+        "logStart": "16:00:00",
+        "logEnd": "18:00:00",
+        "logDate": "2024-01-23T00:00:00",
+        "logDetails": "Membuat TASK-004",
+        "userId": 1,
+        "project": {"projectId": 1, "projectName": "MADAM"}
+      },
+      {
+        "logId": 14,
+        "logStart": "17:00:00",
+        "logEnd": "18:00:00",
+        "logDate": "2024-01-23T00:00:00",
+        "logDetails": "Membuat TASK-003",
+        "userId": 1,
+        "project": {"projectId": 2, "projectName": "EDP"}
+      },
+      {
+        "logId": 13,
+        "logStart": "15:00:00",
+        "logEnd": "18:00:00",
+        "logDate": "2024-01-23T00:00:00",
+        "logDetails": "Membuat TASK-002",
+        "userId": 1,
+        "project": {"projectId": 1, "projectName": "MADAM"}
+      },
+      {
+        "logId": 12,
+        "logStart": "13:00:00",
+        "logEnd": "14:00:00",
+        "logDate": "2024-01-23T00:00:00",
+        "logDetails": "Membuat Task TASK-001",
+        "userId": 1,
+        "project": {"projectId": 2, "projectName": "EDP"}
+      }
+    ],
+    "projects": [
+      {"projectId": 2, "projectName": "EDP"},
+      {"projectId": 1, "projectName": "MADAM"}
+    ]
+  }
+  ''';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<DetailTaskProvider>(context, listen: false).getDataDetail();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    Map<String, List<dynamic>> groupedWorklogs = groupWorklogsByDate(jsonData);
+
     return Scaffold(
       backgroundColor: forthColor,
       body: SingleChildScrollView(
@@ -49,7 +203,6 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // TODO: AppBar homepage
             const AppbarHomePage(),
-
             // TODO: container date now, filtered by & button add task
             Padding(
               padding:
@@ -514,297 +667,319 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.only(top: 40.0),
                       child: Center(
                         child: ListView.builder(
-                          itemCount: daysOfWeek.length,
+                          itemCount: groupedWorklogs.length,
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           padding: EdgeInsets.zero,
                           itemBuilder: (context, indexDay) {
+                            String date =
+                                groupedWorklogs.keys.elementAt(indexDay);
+                            List<dynamic> logs = groupedWorklogs[date]!;
                             return Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
                               child: SingleChildScrollView(
                                 child: Column(
                                   children: [
-                                    Text(daysOfWeek[indexDay]),
+                                    // Text(daysOfWeek[indexDay]),
+                                    Text('Date: $date'),
+                                    // Text(logs[indexDay]['project']["projectName"]),
                                     SizedBox(
                                       width: 200.0,
-                                      child: Consumer<PostDataDummyProvider>(
+                                      child: Consumer<DetailTaskProvider>(
                                         builder:
                                             (context, valuePostData, child) {
-                                          return ListView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: valuePostData
-                                                .dataWorklog.length,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            padding: EdgeInsets.zero,
-                                            itemBuilder: (context, indexCard) {
-                                              return InkWell(
-                                                onTap: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return Center(
-                                                        child: Container(
-                                                          height: 600,
-                                                          width: 600,
-                                                          decoration:
-                                                              const BoxDecoration(
-                                                            color: whiteColor,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(
-                                                              Radius.circular(
-                                                                  6.0),
+                                          if (valuePostData.state ==
+                                              ResultState.isLoading) {
+                                            return const CircularProgressIndicator
+                                                .adaptive();
+                                          } else if (valuePostData.state ==
+                                              ResultState.hasData) {
+                                            return ListView.builder(
+                                              shrinkWrap: true,
+                                              // itemCount: valuePostData
+                                              //     .hasilDetailTask!
+                                              //     .worklogs
+                                              //     .length,
+                                              itemCount: logs.length,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              padding: EdgeInsets.zero,
+                                              itemBuilder:
+                                                  (context, indexCard) {
+                                                return InkWell(
+                                                  onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return Center(
+                                                          child: Container(
+                                                            height: 600,
+                                                            width: 600,
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              color: whiteColor,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    6.0),
+                                                              ),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .all(
+                                                                      30.0),
+                                                              child: Column(
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                        "Detail Task",
+                                                                        style: myTextTheme.headlineSmall!.copyWith(
+                                                                            fontSize:
+                                                                                20.0,
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      ),
+                                                                      IconButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                        icon:
+                                                                            const Icon(
+                                                                          Icons
+                                                                              .cancel_outlined,
+                                                                          size:
+                                                                              24.0,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  const Padding(
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .symmetric(
+                                                                      vertical:
+                                                                          20.0,
+                                                                    ),
+                                                                    child: Divider(
+                                                                        color:
+                                                                            blackColor),
+                                                                  ),
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                        valuePostData
+                                                                            .hasilDetailTask!
+                                                                            .worklogs[indexCard]
+                                                                            .userId
+                                                                            .toString(),
+                                                                        style: myTextTheme
+                                                                            .titleLarge!
+                                                                            .copyWith(fontWeight: FontWeight.bold),
+                                                                      ),
+                                                                      Container(
+                                                                        height:
+                                                                            32,
+                                                                        decoration: const BoxDecoration(
+                                                                            color:
+                                                                                thirdColor,
+                                                                            borderRadius:
+                                                                                BorderRadius.all(Radius.circular(10.0))),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.symmetric(horizontal: 18.0),
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              const Icon(
+                                                                                Icons.push_pin_outlined,
+                                                                                size: 20.0,
+                                                                              ),
+                                                                              const SizedBox(width: 4.0),
+                                                                              Text(
+                                                                                valuePostData.hasilDetailTask!.worklogs[indexCard].project.projectName.toString(),
+                                                                                style: myTextTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        vertical:
+                                                                            16.0),
+                                                                    child: Text(
+                                                                      valuePostData
+                                                                          .hasilDetailTask!
+                                                                          .worklogs[
+                                                                              indexCard]
+                                                                          .logDetails,
+                                                                      maxLines:
+                                                                          3,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: myTextTheme.bodyMedium!.copyWith(
+                                                                          fontSize:
+                                                                              15.0,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                  ),
+                                                                  Row(
+                                                                    children: [
+                                                                      Image
+                                                                          .asset(
+                                                                        "assets/images/logo_avatar.png",
+                                                                        height:
+                                                                            48.0,
+                                                                      ),
+                                                                      const SizedBox(
+                                                                          width:
+                                                                              15.0),
+                                                                      Text(
+                                                                        "Nama User",
+                                                                        style: myTextTheme
+                                                                            .bodyLarge!
+                                                                            .copyWith(fontWeight: FontWeight.w600),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          20.0),
+                                                                  Row(
+                                                                    children: [
+                                                                      Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text(
+                                                                            "Date",
+                                                                            style:
+                                                                                myTextTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
+                                                                          ),
+                                                                          Text(
+                                                                            valuePostData.hasilDetailTask!.worklogs[indexCard].logDate.toString(),
+                                                                            style:
+                                                                                myTextTheme.bodyMedium,
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      const SizedBox(
+                                                                          width:
+                                                                              20.0),
+                                                                      Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text(
+                                                                            "Duration Hour",
+                                                                            style:
+                                                                                myTextTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
+                                                                          ),
+                                                                          Text(
+                                                                            "${valuePostData.hasilDetailTask!.worklogs[indexCard].logStart.toString()} - ${valuePostData.hasilDetailTask!.worklogs[indexCard].logEnd.toString()}",
+                                                                            style:
+                                                                                myTextTheme.bodyMedium,
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(30.0),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    width: 200,
+                                                    color: yellowColor1,
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            top: 10),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          const Expanded(
+                                                            child: Icon(Icons
+                                                                .check_circle_outline_outlined),
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 10.0),
+                                                          Expanded(
+                                                            flex: 4,
                                                             child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
                                                               children: [
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    Text(
-                                                                      "Detail Task",
-                                                                      style: myTextTheme.headlineSmall!.copyWith(
-                                                                          fontSize:
-                                                                              20.0,
+                                                                Text(
+                                                                  // valuePostData
+                                                                  //     .hasilDetailTask!
+                                                                  //     .worklogs[
+                                                                  //         indexCard]
+                                                                  //     .project
+                                                                  //     .projectName,
+                                                                  logs[indexCard]["project"]["projectName"],
+                                                                  maxLines: 2,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  style: myTextTheme
+                                                                      .bodyMedium!
+                                                                      .copyWith(
                                                                           fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
-                                                                    IconButton(
-                                                                      onPressed:
-                                                                          () {},
-                                                                      icon:
-                                                                          const Icon(
-                                                                        Icons
-                                                                            .cancel_outlined,
-                                                                        size:
-                                                                            24.0,
-                                                                      ),
-                                                                    ),
-                                                                  ],
+                                                                              FontWeight.w600),
                                                                 ),
-                                                                const Padding(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .symmetric(
-                                                                    vertical:
-                                                                        20.0,
-                                                                  ),
-                                                                  child: Divider(
-                                                                      color:
-                                                                          blackColor),
-                                                                ),
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    Text(
-                                                                      valuePostData
-                                                                          .dataWorklog[
-                                                                              indexCard]
-                                                                          .titleWorklog,
-                                                                      style: myTextTheme
-                                                                          .titleLarge!
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.bold),
-                                                                    ),
-                                                                    Container(
-                                                                      height:
-                                                                          32,
-                                                                      decoration: const BoxDecoration(
-                                                                          color:
-                                                                              thirdColor,
-                                                                          borderRadius:
-                                                                              BorderRadius.all(Radius.circular(10.0))),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.symmetric(horizontal: 18.0),
-                                                                        child:
-                                                                            Row(
-                                                                          children: [
-                                                                            const Icon(
-                                                                              Icons.push_pin_outlined,
-                                                                              size: 20.0,
-                                                                            ),
-                                                                            const SizedBox(width: 4.0),
-                                                                            Text(
-                                                                              valuePostData.dataWorklog[indexCard].projectName,
-                                                                              style: myTextTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .symmetric(
-                                                                      vertical:
-                                                                          16.0),
-                                                                  child: Text(
-                                                                    valuePostData
-                                                                        .dataWorklog[
-                                                                            indexCard]
-                                                                        .descriptionWorklog,
-                                                                    maxLines: 3,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style: myTextTheme.bodyMedium!.copyWith(
-                                                                        fontSize:
-                                                                            15.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w500),
-                                                                  ),
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    Image.asset(
-                                                                      "assets/images/logo_avatar.png",
-                                                                      height:
-                                                                          48.0,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                        width:
-                                                                            15.0),
-                                                                    Text(
-                                                                      "Nama User",
-                                                                      style: myTextTheme
-                                                                          .bodyLarge!
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.w600),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                const SizedBox(
-                                                                    height:
-                                                                        20.0),
-                                                                Row(
-                                                                  children: [
-                                                                    Column(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .start,
-                                                                      children: [
-                                                                        Text(
-                                                                          "Date",
-                                                                          style: myTextTheme
-                                                                              .bodyMedium!
-                                                                              .copyWith(fontWeight: FontWeight.w600),
-                                                                        ),
-                                                                        Text(
-                                                                          valuePostData
-                                                                              .dataWorklog[indexCard]
-                                                                              .date,
-                                                                          style:
-                                                                              myTextTheme.bodyMedium,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                        width:
-                                                                            20.0),
-                                                                    Column(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .start,
-                                                                      children: [
-                                                                        Text(
-                                                                          "Duration Hour",
-                                                                          style: myTextTheme
-                                                                              .bodyMedium!
-                                                                              .copyWith(fontWeight: FontWeight.w600),
-                                                                        ),
-                                                                        Text(
-                                                                          "${valuePostData.dataWorklog[indexCard].timeStart} - ${valuePostData.dataWorklog[indexCard].timeEnd}",
-                                                                          style:
-                                                                              myTextTheme.bodyMedium,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ],
+                                                                Text(
+                                                                  "${logs[indexCard]["logStart"]} - ${logs[indexCard]["logEnd"]}",
+                                                                  // "${valuePostData.hasilDetailTask!.worklogs[indexCard].logStart} - ${valuePostData.hasilDetailTask!.worklogs[indexCard].logEnd}",
+                                                                  style: myTextTheme
+                                                                      .bodyMedium!
+                                                                      .copyWith(
+                                                                          fontWeight:
+                                                                              FontWeight.w400),
                                                                 ),
                                                               ],
                                                             ),
                                                           ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                                child: Container(
-                                                  width: 200,
-                                                  color: yellowColor1,
-                                                  margin: const EdgeInsets.only(
-                                                      top: 10),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        const Expanded(
-                                                          child: Icon(Icons
-                                                              .check_circle_outline_outlined),
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 10.0),
-                                                        Expanded(
-                                                          flex: 4,
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                valuePostData
-                                                                    .dataWorklog[
-                                                                        indexCard]
-                                                                    .projectName,
-                                                                maxLines: 2,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                style: myTextTheme
-                                                                    .bodyMedium!
-                                                                    .copyWith(
-                                                                        fontWeight:
-                                                                            FontWeight.w600),
-                                                              ),
-                                                              Text(
-                                                                "${valuePostData.dataWorklog[indexCard].timeStart} - ${valuePostData.dataWorklog[indexCard].timeEnd}",
-                                                                style: myTextTheme
-                                                                    .bodyMedium!
-                                                                    .copyWith(
-                                                                        fontWeight:
-                                                                            FontWeight.w400),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                          );
+                                                );
+                                              },
+                                            );
+                                          } else {
+                                            return Container();
+                                          }
                                         },
                                       ),
                                     ),

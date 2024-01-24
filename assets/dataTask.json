@@ -1,0 +1,161 @@
+{
+    "userId": 1,
+    "username": "martin27",
+    "fullName": "Martin Christian",
+    "worklogs": [
+      {
+        "logId": 5,
+        "logStart": "13:00:00",
+        "logEnd": "15:00:00",
+        "logDate": "2024-01-21T00:00:00",
+        "logDetails": "Memperbaiki tiket BUG-999",
+        "userId": 1,
+        "project": {
+          "projectId": 2,
+          "projectName": "EDP"
+        }
+      },    
+      {
+        "logId": 10,
+        "logStart": "15:00:00",
+        "logEnd": "17:00:00",
+        "logDate": "2024-01-21T00:00:00",
+        "logDetails": "Memperbaiki tiket lain-lain",
+        "userId": 1,
+        "project": {
+          "projectId": 2,
+          "projectName": "EDP"
+        }
+      },
+      {
+        "logId": 9,
+        "logStart": "14:30:00",
+        "logEnd": "16:30:00",
+        "logDate": "2024-01-21T00:00:00",
+        "logDetails": "Memperbaiki tiket lain-lain",
+        "userId": 1,
+        "project": {
+          "projectId": 2,
+          "projectName": "EDP"
+        }
+      },
+      {
+        "logId": 8,
+        "logStart": "14:00:00",
+        "logEnd": "16:00:00",
+        "logDate": "2024-01-21T00:00:00",
+        "logDetails": "Memperbaiki tiket lain-lain",
+        "userId": 1,
+        "project": {
+          "projectId": 2,
+          "projectName": "EDP"
+        }
+      },
+      {
+        "logId": 7,
+        "logStart": "13:30:00",
+        "logEnd": "15:30:00",
+        "logDate": "2024-01-21T00:00:00",
+        "logDetails": "Memperbaiki tiket lain-lain",
+        "userId": 1,
+        "project": {
+          "projectId": 2,
+          "projectName": "EDP"
+        }
+      },
+      {
+        "logId": 6,
+        "logStart": "13:00:00",
+        "logEnd": "15:00:00",
+        "logDate": "2024-01-21T00:00:00",
+        "logDetails": "Memperbaiki tiket BUG-999",
+        "userId": 1,
+        "project": {
+          "projectId": 2,
+          "projectName": "EDP"
+        }
+      },
+      {
+        "logId": 1,
+        "logStart": "19:00:00",
+        "logEnd": "20:00:00",
+        "logDate": "2024-01-22T00:00:00",
+        "logDetails": "Meeting project MADAM bersama andhika",
+        "userId": 1,
+        "project": {
+          "projectId": 1,
+          "projectName": "MADAM"
+        }
+      },
+      {
+        "logId": 2,
+        "logStart": "12:00:00",
+        "logEnd": "15:00:00",
+        "logDate": "2024-01-23T00:00:00",
+        "logDetails": "Fixing Ticket BUG-001",
+        "userId": 1,
+        "project": {
+          "projectId": 3,
+          "projectName": "ARJUNA"
+        }
+      },
+      {
+        "logId": 15,
+        "logStart": "16:00:00",
+        "logEnd": "18:00:00",
+        "logDate": "2024-01-23T00:00:00",
+        "logDetails": "Membuat TASK-004",
+        "userId": 1,
+        "project": {
+          "projectId": 1,
+          "projectName": "MADAM"
+        }
+      },
+      {
+        "logId": 14,
+        "logStart": "17:00:00",
+        "logEnd": "18:00:00",
+        "logDate": "2024-01-23T00:00:00",
+        "logDetails": "Membuat TASK-003",
+        "userId": 1,
+        "project": {
+          "projectId": 2,
+          "projectName": "EDP"
+        }
+      },
+      {
+        "logId": 13,
+        "logStart": "15:00:00",
+        "logEnd": "18:00:00",
+        "logDate": "2024-01-23T00:00:00",
+        "logDetails": "Membuat TASK-002",
+        "userId": 1,
+        "project": {
+          "projectId": 1,
+          "projectName": "MADAM"
+        }
+      },
+      {
+        "logId": 12,
+        "logStart": "13:00:00",
+        "logEnd": "14:00:00",
+        "logDate": "2024-01-23T00:00:00",
+        "logDetails": "Membuat Task TASK-001",
+        "userId": 1,
+        "project": {
+          "projectId": 2,
+          "projectName": "EDP"
+        }
+      }
+    ],
+    "projects": [
+      {
+        "projectId": 2,
+        "projectName": "EDP"
+      },
+      {
+        "projectId": 1,
+        "projectName": "MADAM"
+      }
+    ]
+  }
