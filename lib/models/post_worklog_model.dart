@@ -1,21 +1,21 @@
 import 'dart:convert';
 
-PostLoginModel postLoginModelFromJson(String str) => PostLoginModel.fromJson(json.decode(str));
+PostWorklogModel postWorklogModelFromJson(String str) => PostWorklogModel.fromJson(json.decode(str));
 
-String postLoginModelToJson(PostLoginModel data) => json.encode(data.toJson());
+String postWorklogModelToJson(PostWorklogModel data) => json.encode(data.toJson());
 
-class PostLoginModel {
+class PostWorklogModel {
     Messages messages;
     bool success;
     dynamic errors;
 
-    PostLoginModel({
+    PostWorklogModel({
         required this.messages,
         required this.success,
         required this.errors,
     });
 
-    factory PostLoginModel.fromJson(Map<String, dynamic> json) => PostLoginModel(
+    factory PostWorklogModel.fromJson(Map<String, dynamic> json) => PostWorklogModel(
         messages: Messages.fromJson(json["messages"]),
         success: json["success"],
         errors: json["errors"],

@@ -6,11 +6,11 @@ import 'package:flutter_worklog/models/login_model.dart';
 import 'package:flutter_worklog/utils/enum.dart';
 
 class LoginProvider extends ChangeNotifier {
-  LoginModel? hasilPost;
-  LoginService servicesLogin = LoginService();
+  PostLoginModel? hasilPost;
+  PostLoginService servicesLogin = PostLoginService();
   ResultState state = ResultState.noData;
 
-  Future<LoginModel?> postLoginModel(String username, String password) async {
+  Future<PostLoginModel?> postPostLoginModel(String username, String password) async {
     try {
       state = ResultState.isLoading;
       notifyListeners();

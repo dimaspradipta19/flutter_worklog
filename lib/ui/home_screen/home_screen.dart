@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_worklog/data/provider/detail__task_provider.dart';
+import 'package:flutter_worklog/data/provider/get_data_worklog_provider.dart';
 import 'package:flutter_worklog/data/provider/picker_provider.dart';
 import 'package:flutter_worklog/data/provider/post_data_dummy_provider.dart';
 import 'package:flutter_worklog/models/post_data_dummy_model.dart';
@@ -11,6 +9,7 @@ import 'package:flutter_worklog/utils/styles.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/provider/detail__task_provider.dart';
 import '../../widgets/widget_appbar_homescreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -35,226 +34,19 @@ class _HomeScreenState extends State<HomeScreen> {
     _projectController.dispose();
   }
 
-  Map<String, List<dynamic>> groupWorklogsByDate(String jsonData) {
-    Map<String, List<dynamic>> groupedWorklogs = {};
-
-    Map<String, dynamic> data = json.decode(jsonData);
-
-    List<dynamic> worklogs = data['worklogs'];
-    for (int i = 0; i < worklogs.length; i++) {
-      String logDate = worklogs[i]['logDate'];
-
-      if (groupedWorklogs.containsKey(logDate)) {
-        groupedWorklogs[logDate]?.add(worklogs[i]);
-      } else {
-        groupedWorklogs[logDate] = [worklogs[i]];
-      }
-    }
-
-    return groupedWorklogs;
-  }
-
-  final jsonData = '''
-   {
-  "userId": 1,
-  "username": "martin27",
-  "fullName": "Martin Christian",
-  "worklogs": [
-    {
-      "logId": 19,
-      "logStart": "09:00:00",
-      "logEnd": "11:30:00",
-      "logDate": "2024-01-24T00:00:00",
-      "logDetails": "Developing new feature for module A",
-      "logTitle": "Feature Implementation",
-      "userId": 1,
-      "project": {
-        "projectId": 2,
-        "projectName": "EDP"
-      }
-    },
-    {
-      "logId": 28,
-      "logStart": "13:30:00",
-      "logEnd": "15:00:00",
-      "logDate": "2024-01-24T00:00:00",
-      "logDetails": "Refactoring code for better performance",
-      "logTitle": "Code Refactoring",
-      "userId": 1,
-      "project": {
-        "projectId": 3,
-        "projectName": "ARJUNA"
-      }
-    },
-    {
-      "logId": 30,
-      "logStart": "15:30:00",
-      "logEnd": "17:45:00",
-      "logDate": "2024-01-24T00:00:00",
-      "logDetails": "Reviewing code for PR #56",
-      "logTitle": "Code Review",
-      "userId": 1,
-      "project": {
-        "projectId": 3,
-        "projectName": "ARJUNA"
-      }
-    },
-    {
-      "logId": 20,
-      "logStart": "14:45:00",
-      "logEnd": "17:15:00",
-      "logDate": "2024-01-24T00:00:00",
-      "logDetails": "Reviewing code for PR #56",
-      "logTitle": "Code Review",
-      "userId": 1,
-      "project": {
-        "projectId": 3,
-        "projectName": "ARJUNA"
-      }
-    },
-    {
-      "logId": 29,
-      "logStart": "10:00:00",
-      "logEnd": "12:00:00",
-      "logDate": "2024-01-24T00:00:00",
-      "logDetails": "Developing new feature for module A",
-      "logTitle": "Feature Implementation",
-      "userId": 1,
-      "project": {
-        "projectId": 2,
-        "projectName": "EDP"
-      }
-    },
-    {
-      "logId": 22,
-      "logStart": "16:00:00",
-      "logEnd": "18:30:00",
-      "logDate": "2024-01-25T00:00:00",
-      "logDetails": "Researching new API integration methods",
-      "logTitle": "API Research",
-      "userId": 1,
-      "project": {
-        "projectId": 2,
-        "projectName": "EDP"
-      }
-    },
-    {
-      "logId": 31,
-      "logStart": "09:45:00",
-      "logEnd": "11:15:00",
-      "logDate": "2024-01-25T00:00:00",
-      "logDetails": "Attending project meeting",
-      "logTitle": "Project Meeting",
-      "userId": 1,
-      "project": {
-        "projectId": 1,
-        "projectName": "MADAM"
-      }
-    },
-    {
-      "logId": 25,
-      "logStart": "11:00:00",
-      "logEnd": "12:30:00",
-      "logDate": "2024-01-26T00:00:00",
-      "logDetails": "Preparing presentation for client meeting",
-      "logTitle": "Client Meeting Preparation",
-      "userId": 1,
-      "project": {
-        "projectId": 2,
-        "projectName": "EDP"
-      }
-    },
-    {
-      "logId": 34,
-      "logStart": "08:30:00",
-      "logEnd": "09:45:00",
-      "logDate": "2024-01-26T00:00:00",
-      "logDetails": "Writing unit tests for new code",
-      "logTitle": "Unit Testing",
-      "userId": 1,
-      "project": {
-        "projectId": 1,
-        "projectName": "MADAM"
-      }
-    },
-    {
-      "logId": 24,
-      "logStart": "08:45:00",
-      "logEnd": "10:15:00",
-      "logDate": "2024-01-26T00:00:00",
-      "logDetails": "Writing unit tests for new code",
-      "logTitle": "Unit Testing",
-      "userId": 1,
-      "project": {
-        "projectId": 3,
-        "projectName": "ARJUNA"
-      }
-    },
-    {
-      "logId": 35,
-      "logStart": "10:45:00",
-      "logEnd": "12:15:00",
-      "logDate": "2024-01-26T00:00:00",
-      "logDetails": "Preparing presentation for client meeting",
-      "logTitle": "Client Meeting Preparation",
-      "userId": 1,
-      "project": {
-        "projectId": 2,
-        "projectName": "EDP"
-      }
-    },
-    {
-      "logId": 27,
-      "logStart": "09:45:00",
-      "logEnd": "11:15:00",
-      "logDate": "2024-01-27T00:00:00",
-      "logDetails": "Reviewing user feedback on new feature",
-      "logTitle": "User Feedback Review",
-      "userId": 1,
-      "project": {
-        "projectId": 1,
-        "projectName": "MADAM"
-      }
-    },
-    {
-      "logId": 37,
-      "logStart": "16:45:00",
-      "logEnd": "18:15:00",
-      "logDate": "2024-01-27T00:00:00",
-      "logDetails": "Troubleshooting performance issue",
-      "logTitle": "Performance Troubleshooting",
-      "userId": 1,
-      "project": {
-        "projectId": 2,
-        "projectName": "EDP"
-      }
-    }
-  ],
-  "projects": [
-    {
-      "projectId": 2,
-      "projectName": "EDP"
-    },
-    {
-      "projectId": 1,
-      "projectName": "MADAM"
-    }
-  ]
-}
-  ''';
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<DataWorklogProvider>(context, listen: false)
+          .initializeWorklogs();
       Provider.of<DetailTaskProvider>(context, listen: false).getDataDetail();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    Map<String, List<dynamic>> groupedWorklogs = groupWorklogsByDate(jsonData);
-
+    var dataProjects = Provider.of<DetailTaskProvider>(context).hasilDetailTask;
     return Scaffold(
       backgroundColor: forthColor,
       body: SingleChildScrollView(
@@ -579,23 +371,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           "Project Title"),
                                                       controller:
                                                           _projectController,
-                                                      dropdownMenuEntries: const [
-                                                        DropdownMenuEntry(
-                                                            label: "Project1",
-                                                            value: 1),
-                                                        DropdownMenuEntry(
-                                                            label: "Project2",
-                                                            value: 2),
-                                                        DropdownMenuEntry(
-                                                            label: "Project3",
-                                                            value: 3),
-                                                        DropdownMenuEntry(
-                                                            label: "Project4",
-                                                            value: 4),
-                                                        DropdownMenuEntry(
-                                                            label: "Project5",
-                                                            value: 5),
-                                                      ],
+                                                      dropdownMenuEntries:
+                                                          dataProjects!.projects
+                                                              .map((index) =>
+                                                                  DropdownMenuEntry(
+                                                                    label: index
+                                                                        .projectName,
+                                                                    value: index
+                                                                        .projectId,
+                                                                  ))
+                                                              .toList(),
                                                     ),
                                                     // Form title and desc task
                                                     const SizedBox(
@@ -688,6 +473,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     log(pickerProvider
                                                         .timeStartController
                                                         .text);
+                                                    log(_projectController
+                                                        .text);
                                                   },
                                                 ),
                                               ],
@@ -725,38 +512,39 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 40.0),
                       child: Center(
-                        child: ListView.builder(
-                          itemCount: groupedWorklogs.length,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          padding: EdgeInsets.zero,
-                          itemBuilder: (context, indexDay) {
-                            String date =
-                                groupedWorklogs.keys.elementAt(indexDay);
-                            List<dynamic> logs = groupedWorklogs[date]!;
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    // Text(daysOfWeek[indexDay]),
-                                    Text('Date: $date'),
-                                    // Text(logs[indexDay]['project']["projectName"]),
-                                    SizedBox(
-                                      width: 200.0,
-                                      child: Consumer<DetailTaskProvider>(
-                                        builder:
-                                            (context, valuePostData, child) {
-                                          if (valuePostData.state ==
-                                              ResultState.isLoading) {
-                                            return const CircularProgressIndicator
-                                                .adaptive();
-                                          } else if (valuePostData.state ==
-                                              ResultState.hasData) {
-                                            return ListView.builder(
+                        child: Consumer<DataWorklogProvider>(
+                          builder: (context, valueDataWorklog, child) {
+                            Map<String, List<dynamic>> groupedWorklogs =
+                                valueDataWorklog.groupedWorklogs;
+
+                            if (valueDataWorklog.state ==
+                                ResultState.isLoading) {
+                              return const CircularProgressIndicator.adaptive();
+                            } else if (valueDataWorklog.state ==
+                                ResultState.hasData) {
+                              return ListView.builder(
+                                itemCount: groupedWorklogs.length,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context, indexDay) {
+                                  String date =
+                                      groupedWorklogs.keys.elementAt(indexDay);
+                                  List<dynamic> logs = groupedWorklogs[date]!;
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0),
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          // Text(daysOfWeek[indexDay]),
+                                          Text('Date: $date'),
+                                          // Text(logs[indexDay]['project']["projectName"]),
+                                          SizedBox(
+                                            width: 200.0,
+                                            child: ListView.builder(
                                               shrinkWrap: true,
-                                              // itemCount: valuePostData
+                                              // itemCount: valueDetailTask
                                               //     .hasilDetailTask!
                                               //     .worklogs
                                               //     .length,
@@ -768,205 +556,215 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   (context, indexCard) {
                                                 return InkWell(
                                                   onTap: () {
-                                                    // showDialog(
-                                                    //   context: context,
-                                                    //   builder: (context) {
-                                                    //     return Center(
-                                                    //       child: Container(
-                                                    //         height: 600,
-                                                    //         width: 600,
-                                                    //         decoration:
-                                                    //             const BoxDecoration(
-                                                    //           color: whiteColor,
-                                                    //           borderRadius:
-                                                    //               BorderRadius
-                                                    //                   .all(
-                                                    //             Radius.circular(
-                                                    //                 6.0),
-                                                    //           ),
-                                                    //         ),
-                                                    //         child: Padding(
-                                                    //           padding:
-                                                    //               const EdgeInsets
-                                                    //                       .all(
-                                                    //                   30.0),
-                                                    //           child: Column(
-                                                    //             children: [
-                                                    //               Row(
-                                                    //                 mainAxisAlignment:
-                                                    //                     MainAxisAlignment
-                                                    //                         .spaceBetween,
-                                                    //                 children: [
-                                                    //                   Text(
-                                                    //                     "Detail Task",
-                                                    //                     style: myTextTheme.headlineSmall!.copyWith(
-                                                    //                         fontSize:
-                                                    //                             20.0,
-                                                    //                         fontWeight:
-                                                    //                             FontWeight.bold),
-                                                    //                   ),
-                                                    //                   IconButton(
-                                                    //                     onPressed:
-                                                    //                         () {
-                                                    //                           Navigator.pop(context);
-                                                    //                         },
-                                                    //                     icon:
-                                                    //                         const Icon(
-                                                    //                       Icons
-                                                    //                           .cancel_outlined,
-                                                    //                       size:
-                                                    //                           24.0,
-                                                    //                     ),
-                                                    //                   ),
-                                                    //                 ],
-                                                    //               ),
-                                                    //               const Padding(
-                                                    //                 padding:
-                                                    //                     EdgeInsets
-                                                    //                         .symmetric(
-                                                    //                   vertical:
-                                                    //                       20.0,
-                                                    //                 ),
-                                                    //                 child: Divider(
-                                                    //                     color:
-                                                    //                         blackColor),
-                                                    //               ),
-                                                    //               Row(
-                                                    //                 mainAxisAlignment:
-                                                    //                     MainAxisAlignment
-                                                    //                         .spaceBetween,
-                                                    //                 children: [
-                                                    //                   Text(
-                                                    //                     valuePostData
-                                                    //                         .hasilDetailTask!
-                                                    //                         .worklogs[indexCard]
-                                                    //                         .userId
-                                                    //                         .toString(),
-                                                    //                     style: myTextTheme
-                                                    //                         .titleLarge!
-                                                    //                         .copyWith(fontWeight: FontWeight.bold),
-                                                    //                   ),
-                                                    //                   Container(
-                                                    //                     height:
-                                                    //                         32,
-                                                    //                     decoration: const BoxDecoration(
-                                                    //                         color:
-                                                    //                             thirdColor,
-                                                    //                         borderRadius:
-                                                    //                             BorderRadius.all(Radius.circular(10.0))),
-                                                    //                     child:
-                                                    //                         Padding(
-                                                    //                       padding:
-                                                    //                           const EdgeInsets.symmetric(horizontal: 18.0),
-                                                    //                       child:
-                                                    //                           Row(
-                                                    //                         children: [
-                                                    //                           const Icon(
-                                                    //                             Icons.push_pin_outlined,
-                                                    //                             size: 20.0,
-                                                    //                           ),
-                                                    //                           const SizedBox(width: 4.0),
-                                                    //                           Text(
-                                                    //                             valuePostData.hasilDetailTask!.worklogs[indexCard].project.projectName.toString(),
-                                                    //                             style: myTextTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
-                                                    //                           ),
-                                                    //                         ],
-                                                    //                       ),
-                                                    //                     ),
-                                                    //                   ),
-                                                    //                 ],
-                                                    //               ),
-                                                    //               Padding(
-                                                    //                 padding: const EdgeInsets
-                                                    //                         .symmetric(
-                                                    //                     vertical:
-                                                    //                         16.0),
-                                                    //                 child: Text(
-                                                    //                   valuePostData
-                                                    //                       .hasilDetailTask!
-                                                    //                       .worklogs[
-                                                    //                           indexCard]
-                                                    //                       .logDetails,
-                                                    //                   maxLines:
-                                                    //                       3,
-                                                    //                   overflow:
-                                                    //                       TextOverflow
-                                                    //                           .ellipsis,
-                                                    //                   style: myTextTheme.bodyMedium!.copyWith(
-                                                    //                       fontSize:
-                                                    //                           15.0,
-                                                    //                       fontWeight:
-                                                    //                           FontWeight.w500),
-                                                    //                 ),
-                                                    //               ),
-                                                    //               Row(
-                                                    //                 children: [
-                                                    //                   Image
-                                                    //                       .asset(
-                                                    //                     "assets/images/logo_avatar.png",
-                                                    //                     height:
-                                                    //                         48.0,
-                                                    //                   ),
-                                                    //                   const SizedBox(
-                                                    //                       width:
-                                                    //                           15.0),
-                                                    //                   Text(
-                                                    //                     "Nama User",
-                                                    //                     style: myTextTheme
-                                                    //                         .bodyLarge!
-                                                    //                         .copyWith(fontWeight: FontWeight.w600),
-                                                    //                   ),
-                                                    //                 ],
-                                                    //               ),
-                                                    //               const SizedBox(
-                                                    //                   height:
-                                                    //                       20.0),
-                                                    //               Row(
-                                                    //                 children: [
-                                                    //                   Column(
-                                                    //                     crossAxisAlignment:
-                                                    //                         CrossAxisAlignment.start,
-                                                    //                     children: [
-                                                    //                       Text(
-                                                    //                         "Date",
-                                                    //                         style:
-                                                    //                             myTextTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
-                                                    //                       ),
-                                                    //                       Text(
-                                                    //                         valuePostData.hasilDetailTask!.worklogs[indexCard].logDate.toString(),
-                                                    //                         style:
-                                                    //                             myTextTheme.bodyMedium,
-                                                    //                       ),
-                                                    //                     ],
-                                                    //                   ),
-                                                    //                   const SizedBox(
-                                                    //                       width:
-                                                    //                           20.0),
-                                                    //                   Column(
-                                                    //                     crossAxisAlignment:
-                                                    //                         CrossAxisAlignment.start,
-                                                    //                     children: [
-                                                    //                       Text(
-                                                    //                         "Duration Hour",
-                                                    //                         style:
-                                                    //                             myTextTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
-                                                    //                       ),
-                                                    //                       Text(
-                                                    //                         "${valuePostData.hasilDetailTask!.worklogs[indexCard].logStart.toString()} - ${valuePostData.hasilDetailTask!.worklogs[indexCard].logEnd.toString()}",
-                                                    //                         style:
-                                                    //                             myTextTheme.bodyMedium,
-                                                    //                       ),
-                                                    //                     ],
-                                                    //                   ),
-                                                    //                 ],
-                                                    //               ),
-                                                    //             ],
-                                                    //           ),
-                                                    //         ),
-                                                    //       ),
-                                                    //     );
-                                                    //   },
-                                                    // );
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return Center(
+                                                          child: Container(
+                                                            height: 600,
+                                                            width: 600,
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              color: whiteColor,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    6.0),
+                                                              ),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .all(
+                                                                      30.0),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                        "Detail Task",
+                                                                        style: myTextTheme.headlineSmall!.copyWith(
+                                                                            fontSize:
+                                                                                20.0,
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      ),
+                                                                      IconButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                        icon:
+                                                                            const Icon(
+                                                                          Icons
+                                                                              .cancel_outlined,
+                                                                          size:
+                                                                              24.0,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  const Padding(
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .symmetric(
+                                                                      vertical:
+                                                                          20.0,
+                                                                    ),
+                                                                    child: Divider(
+                                                                        color:
+                                                                            blackColor),
+                                                                  ),
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                        logs[indexCard]
+                                                                            [
+                                                                            "logTitle"],
+                                                                        style: myTextTheme
+                                                                            .titleLarge!
+                                                                            .copyWith(fontWeight: FontWeight.bold),
+                                                                      ),
+                                                                      Container(
+                                                                        height:
+                                                                            32,
+                                                                        decoration: const BoxDecoration(
+                                                                            color:
+                                                                                thirdColor,
+                                                                            borderRadius:
+                                                                                BorderRadius.all(Radius.circular(10.0))),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.symmetric(horizontal: 18.0),
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              const Icon(
+                                                                                Icons.push_pin_outlined,
+                                                                                size: 20.0,
+                                                                              ),
+                                                                              const SizedBox(width: 4.0),
+                                                                              Text(
+                                                                                logs[indexCard]["project"]["projectName"],
+                                                                                style: myTextTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        vertical:
+                                                                            16.0),
+                                                                    child: Text(
+                                                                      logs[indexCard]
+                                                                          [
+                                                                          "logDetails"],
+                                                                      maxLines:
+                                                                          3,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: myTextTheme.bodyMedium!.copyWith(
+                                                                          fontSize:
+                                                                              15.0,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                  ),
+                                                                  Row(
+                                                                    children: [
+                                                                      Image
+                                                                          .asset(
+                                                                        "assets/images/logo_avatar.png",
+                                                                        height:
+                                                                            48.0,
+                                                                      ),
+                                                                      const SizedBox(
+                                                                          width:
+                                                                              15.0),
+                                                                      Text(
+                                                                        "Nama User",
+                                                                        style: myTextTheme
+                                                                            .bodyLarge!
+                                                                            .copyWith(fontWeight: FontWeight.w600),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          20.0),
+                                                                  Row(
+                                                                    children: [
+                                                                      Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text(
+                                                                            "Date",
+                                                                            style:
+                                                                                myTextTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
+                                                                          ),
+                                                                          Text(
+                                                                            logs[indexCard]["logDate"],
+                                                                            style:
+                                                                                myTextTheme.bodyMedium,
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      const SizedBox(
+                                                                          width:
+                                                                              20.0),
+                                                                      Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text(
+                                                                            "Duration Hour",
+                                                                            style:
+                                                                                myTextTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
+                                                                          ),
+                                                                          Text(
+                                                                            "${logs[indexCard]["logStart"]} - ${logs[indexCard]["logEnd"]}",
+                                                                            style:
+                                                                                myTextTheme.bodyMedium,
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Container(
+                                                                    height:
+                                                                        95.0,
+                                                                    width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width,
+                                                                    color:
+                                                                        redColor1,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
                                                   },
                                                   child: Container(
                                                     width: 200,
@@ -1000,7 +798,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       .center,
                                                               children: [
                                                                 Text(
-                                                                  // valuePostData
+                                                                  // valueDetailTask
                                                                   //     .hasilDetailTask!
                                                                   //     .worklogs[
                                                                   //         indexCard]
@@ -1023,7 +821,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 ),
                                                                 Text(
                                                                   "${logs[indexCard]["logStart"]} - ${logs[indexCard]["logEnd"]}",
-                                                                  // "${valuePostData.hasilDetailTask!.worklogs[indexCard].logStart} - ${valuePostData.hasilDetailTask!.worklogs[indexCard].logEnd}",
+                                                                  // "${valueDetailTask.hasilDetailTask!.worklogs[indexCard].logStart} - ${valueDetailTask.hasilDetailTask!.worklogs[indexCard].logEnd}",
                                                                   style: myTextTheme
                                                                       .bodyMedium!
                                                                       .copyWith(
@@ -1039,17 +837,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                 );
                                               },
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        },
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            );
+                                  );
+                                },
+                              );
+                            } else {
+                              return Container();
+                            }
                           },
                         ),
                       ),

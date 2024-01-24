@@ -4,17 +4,17 @@ import 'package:dio/dio.dart';
 
 import '../../models/login_model.dart';
 
-class LoginService {
+class PostLoginService {
   final baseUrl = "";
   final apiKey = "";
   final Dio _dio = Dio();
 
-  Future<LoginModel?> postLogin(String username, String password) async {
+  Future<PostLoginModel?> postLogin(String username, String password) async {
     try {
       var response = await _dio.get(baseUrl);
 
       if (response.statusCode == 200) {
-        var resultLogin = LoginModel.fromJson(response.data);
+        var resultLogin = PostLoginModel.fromJson(response.data);
         return resultLogin;
       } else {
         return _handleError(response);
