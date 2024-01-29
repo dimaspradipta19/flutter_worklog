@@ -1,53 +1,54 @@
 import 'dart:convert';
 
-PostLoginModel postLoginModelFromJson(String str) => PostLoginModel.fromJson(json.decode(str));
+PostLoginModel postLoginModelFromJson(String str) =>
+    PostLoginModel.fromJson(json.decode(str));
 
 String postLoginModelToJson(PostLoginModel data) => json.encode(data.toJson());
 
 class PostLoginModel {
-    Messages messages;
-    bool success;
-    dynamic errors;
+  Messages messages;
+  bool success;
+  // dynamic errors;
 
-    PostLoginModel({
-        required this.messages,
-        required this.success,
-        required this.errors,
-    });
+  PostLoginModel({
+    required this.messages,
+    required this.success,
+    // required this.errors,
+  });
 
-    factory PostLoginModel.fromJson(Map<String, dynamic> json) => PostLoginModel(
+  factory PostLoginModel.fromJson(Map<String, dynamic> json) => PostLoginModel(
         messages: Messages.fromJson(json["messages"]),
         success: json["success"],
-        errors: json["errors"],
-    );
+        // errors: json["errors"],
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "messages": messages.toJson(),
         "success": success,
-        "errors": errors,
-    };
+        // "errors": errors,
+      };
 }
 
 class Messages {
-    int userId;
-    String username;
-    String fullName;
+  int userId;
+  String username;
+  String fullName;
 
-    Messages({
-        required this.userId,
-        required this.username,
-        required this.fullName,
-    });
+  Messages({
+    required this.userId,
+    required this.username,
+    required this.fullName,
+  });
 
-    factory Messages.fromJson(Map<String, dynamic> json) => Messages(
+  factory Messages.fromJson(Map<String, dynamic> json) => Messages(
         userId: json["userId"],
         username: json["username"],
         fullName: json["fullName"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "userId": userId,
         "username": username,
         "fullName": fullName,
-    };
+      };
 }

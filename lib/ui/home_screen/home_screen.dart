@@ -1,22 +1,33 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_worklog/data/provider/get_data_worklog_provider.dart';
 import 'package:flutter_worklog/data/provider/picker_provider.dart';
-import 'package:flutter_worklog/data/provider/post_data_dummy_provider.dart';
-import 'package:flutter_worklog/models/post_data_dummy_model.dart';
 import 'package:flutter_worklog/utils/enum.dart';
 import 'package:flutter_worklog/utils/styles.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/provider/detail__task_provider.dart';
+import '../../data/provider/detail_task_provider.dart';
+import '../../data/provider/post_worklog_provider.dart';
 import '../../widgets/widget_appbar_homescreen.dart';
+import '../../widgets/widget_container_filter.dart';
+import '../../widgets/widget_current_date.dart';
+import '../../widgets/widget_detail_sisa_hour.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+    required this.userId,
+    required this.username,
+    required this.fullName,
+  });
+  // const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
+
+  final int userId;
+  final String username;
+  final String fullName;
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -38,23 +49,35 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      // Get Data worklog all
       Provider.of<DataWorklogProvider>(context, listen: false)
-          .initializeWorklogs();
-      Provider.of<DetailTaskProvider>(context, listen: false).getDataDetail();
+          .initializeWorklogs(widget.userId);
+
+      // Get project dropdown at create task
+      Provider.of<DetailTaskProvider>(context, listen: false)
+          .getDataDetail(widget.userId);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // for looping project dropdown
     var dataProjects = Provider.of<DetailTaskProvider>(context).hasilDetailTask;
+
+    final int userId = widget.userId;
+    final String username = widget.username;
+    final String fullName = widget.fullName;
+
+    // provider to post data
+    final postData =
+        Provider.of<PostDataWorklogProvider>(context, listen: false);
+
     return Scaffold(
       backgroundColor: forthColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // TODO: AppBar homepage
-            const AppbarHomePage(),
-            // TODO: container date now, filtered by & button add task
+            AppbarHomePage(fullName: fullName),
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 100.0, vertical: 50.0),
@@ -64,112 +87,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: MediaQuery.of(context).size.width,
                     child: Row(
                       children: [
-                        //TODO: Current Date
-                        Expanded(
-                          child: Container(
-                            height: 120,
-                            decoration: const BoxDecoration(
-                              color: thirdColor,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(14.0),
-                              child: Stack(
-                                children: [
-                                  const Icon(
-                                    Icons.calendar_today_outlined,
-                                    color: whiteColor,
-                                  ),
-                                  Center(
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          DateFormat.d().format(DateTime.now()),
-                                          style: myTextTheme.headlineMedium!
-                                              .copyWith(
-                                                  fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          DateFormat.MMMM()
-                                              .format(DateTime.now()),
-                                          style: myTextTheme.headlineSmall!
-                                              .copyWith(
-                                                  fontWeight: FontWeight.bold),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        const WidgetCurrentDate(),
                         const SizedBox(width: 4.0),
-                        // TODO: Container filtered by
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            height: 120,
-                            decoration: const BoxDecoration(
-                              color: thirdColor,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(14.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Filtered by",
-                                    style: myTextTheme.titleMedium!.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: whiteColor),
-                                  ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Center(
-                                            child: DropdownMenu(
-                                              hintText: "Period",
-                                              dropdownMenuEntries: const [
-                                                DropdownMenuEntry(
-                                                    label: "Today", value: 1),
-                                              ],
-                                              onSelected: (value) {
-                                                log(value.toString());
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Center(
-                                            child: DropdownMenu(
-                                              hintText: "Projects",
-                                              dropdownMenuEntries: const [
-                                                DropdownMenuEntry(
-                                                    label: "Today", value: 1),
-                                              ],
-                                              onSelected: (value) {
-                                                log(value.toString());
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        WidgetContainerFilter(context),
                         const SizedBox(width: 4.0),
                         // TODO: Button Create Task
                         Expanded(
@@ -189,31 +109,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   const Icon(Icons.watch_later_outlined,
                                       size: 34.0),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "3.00 Hours",
-                                          style: myTextTheme.headlineSmall,
-                                        ),
-                                        Text(
-                                          "This Week",
-                                          style: myTextTheme.titleMedium!
-                                              .copyWith(color: greyColor3),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  const WidgetDetailSisaHour(),
                                   Expanded(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: secondaryColor,
+                                        backgroundColor: primaryColor,
                                         shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(5.0),
@@ -229,13 +129,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                           builder: (context) {
                                             return AlertDialog(
                                               title: const Text('Create Task'),
+                                              backgroundColor: whiteColor,
                                               content: SingleChildScrollView(
                                                 child: Column(
                                                   children: [
                                                     // TODO: Datepicker, Start Time, End Time
                                                     Row(
                                                       children: [
-                                                        // Date
                                                         SizedBox(
                                                           height: 48.0,
                                                           width: 234.0,
@@ -265,7 +165,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               ),
                                                             ),
                                                             onTap: () {
-                                                              // _selectDate();
                                                               pickerProvider
                                                                   .selectDate(
                                                                       context);
@@ -274,7 +173,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         ),
                                                         const SizedBox(
                                                             width: 10.0),
-                                                        // Duration Time
                                                         Row(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
@@ -381,6 +279,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         .projectId,
                                                                   ))
                                                               .toList(),
+                                                      onSelected: (value) {
+                                                        // Restore the value to the controller
+                                                        _projectController
+                                                                .text =
+                                                            value.toString();
+                                                      },
                                                     ),
                                                     // Form title and desc task
                                                     const SizedBox(
@@ -434,47 +338,50 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               actions: <Widget>[
                                                 TextButton(
-                                                  child: const Text('Submit'),
-                                                  onPressed: () {
-                                                    var providerData = Provider
-                                                        .of<PostDataDummyProvider>(
-                                                            context,
-                                                            listen: false);
+                                                  child: Text(
+                                                    'Submit',
+                                                    style:
+                                                        myTextTheme.bodySmall,
+                                                  ),
+                                                  onPressed: () async {
+                                                    if (_formKey.currentState!
+                                                        .validate()) {
+                                                      await postData
+                                                          .postDataWorklog(
+                                                        logDate: pickerProvider
+                                                            .dateController
+                                                            .text,
+                                                        logStart: pickerProvider
+                                                            .timeStartController
+                                                            .text,
+                                                        logEnd: pickerProvider
+                                                            .timeEndController
+                                                            .text,
+                                                        logDetails:
+                                                            _descriptionController
+                                                                .text,
+                                                        userId: userId,
+                                                        projectId: int.tryParse(
+                                                            _projectController
+                                                                .text)!,
+                                                        logTitle:
+                                                            _titleController
+                                                                .text,
+                                                      );
 
-                                                    PostDataDummyModel
-                                                        dataModel =
-                                                        PostDataDummyModel(
-                                                      date: pickerProvider
-                                                          .dateController.text,
-                                                      timeStart: pickerProvider
-                                                          .timeStartController
-                                                          .text,
-                                                      timeEnd: pickerProvider
-                                                          .timeEndController
-                                                          .text,
-                                                      projectName:
-                                                          _projectController
-                                                              .text,
-                                                      titleWorklog:
-                                                          _titleController.text,
-                                                      descriptionWorklog:
-                                                          _descriptionController
-                                                              .text,
-                                                    );
-
-                                                    providerData.addDataWorklog(
-                                                        dataModel);
-
-                                                    log(pickerProvider
-                                                        .dateController.text);
-                                                    log(pickerProvider
-                                                        .timeEndController
-                                                        .text);
-                                                    log(pickerProvider
-                                                        .timeStartController
-                                                        .text);
-                                                    log(_projectController
-                                                        .text);
+                                                      Navigator
+                                                          .pushAndRemoveUntil(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return HomeScreen(
+                                                            userId: userId,
+                                                            username: username,
+                                                            fullName: fullName,
+                                                          );
+                                                        },
+                                                      ), (route) => false);
+                                                    }
                                                   },
                                                 ),
                                               ],
@@ -510,44 +417,51 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: whiteColor,
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 40.0),
-                      child: Center(
-                        child: Consumer<DataWorklogProvider>(
-                          builder: (context, valueDataWorklog, child) {
-                            Map<String, List<dynamic>> groupedWorklogs =
-                                valueDataWorklog.groupedWorklogs;
+                      padding: const EdgeInsets.all(
+                        10.0,
+                      ),
+                      child: Consumer<DataWorklogProvider>(
+                        builder: (context, valueDataWorklog, child) {
+                          Map<String, List<dynamic>> groupedWorklogs =
+                              valueDataWorklog.groupedWorklogs;
 
-                            if (valueDataWorklog.state ==
-                                ResultState.isLoading) {
-                              return const CircularProgressIndicator.adaptive();
-                            } else if (valueDataWorklog.state ==
-                                ResultState.hasData) {
-                              return ListView.builder(
-                                itemCount: groupedWorklogs.length,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.zero,
-                                itemBuilder: (context, indexDay) {
-                                  String date =
-                                      groupedWorklogs.keys.elementAt(indexDay);
-                                  List<dynamic> logs = groupedWorklogs[date]!;
-                                  return Padding(
+                          if (valueDataWorklog.state == ResultState.isLoading) {
+                            return const CircularProgressIndicator.adaptive();
+                          } else if (valueDataWorklog.state ==
+                              ResultState.hasData) {
+                            return ListView.builder(
+                              itemCount: groupedWorklogs.length,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              padding: EdgeInsets.zero,
+                              itemBuilder: (context, indexDay) {
+                                String date =
+                                    groupedWorklogs.keys.elementAt(indexDay);
+                                String dateWithoutTime = date.substring(
+                                    0, 10); // Extract the first 10 characters
+
+                                DateTime parsedDate =
+                                    DateTime.parse(dateWithoutTime);
+                                String fullDayName =
+                                    DateFormat('EEEE').format(parsedDate);
+
+                                List<dynamic> logs = groupedWorklogs[date]!;
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: thirdColor, width: 1),
+                                  ),
+                                  child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20.0),
                                     child: SingleChildScrollView(
                                       child: Column(
                                         children: [
-                                          // Text(daysOfWeek[indexDay]),
-                                          Text('Date: $date'),
-                                          // Text(logs[indexDay]['project']["projectName"]),
+                                          Text(fullDayName),
                                           SizedBox(
                                             width: 200.0,
                                             child: ListView.builder(
                                               shrinkWrap: true,
-                                              // itemCount: valueDetailTask
-                                              //     .hasilDetailTask!
-                                              //     .worklogs
-                                              //     .length,
                                               itemCount: logs.length,
                                               physics:
                                                   const NeverScrollableScrollPhysics(),
@@ -561,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       builder: (context) {
                                                         return Center(
                                                           child: Container(
-                                                            height: 600,
+                                                            height: 500,
                                                             width: 600,
                                                             decoration:
                                                                 const BoxDecoration(
@@ -583,45 +497,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     CrossAxisAlignment
                                                                         .start,
                                                                 children: [
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Text(
-                                                                        "Detail Task",
-                                                                        style: myTextTheme.headlineSmall!.copyWith(
-                                                                            fontSize:
-                                                                                20.0,
-                                                                            fontWeight:
-                                                                                FontWeight.bold),
-                                                                      ),
-                                                                      IconButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                        icon:
-                                                                            const Icon(
-                                                                          Icons
-                                                                              .cancel_outlined,
-                                                                          size:
-                                                                              24.0,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
+                                                                  const WidgetAppbarDetailWorklog(),
                                                                   const Padding(
                                                                     padding:
                                                                         EdgeInsets
                                                                             .symmetric(
                                                                       vertical:
-                                                                          20.0,
+                                                                          16.0,
                                                                     ),
                                                                     child: Divider(
                                                                         color:
-                                                                            blackColor),
+                                                                            greyColor2),
                                                                   ),
                                                                   Row(
                                                                     mainAxisAlignment:
@@ -651,9 +537,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           child:
                                                                               Row(
                                                                             children: [
-                                                                              const Icon(
-                                                                                Icons.push_pin_outlined,
-                                                                                size: 20.0,
+                                                                              Image.asset(
+                                                                                "assets/images/logo_project.png",
                                                                               ),
                                                                               const SizedBox(width: 4.0),
                                                                               Text(
@@ -699,7 +584,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           width:
                                                                               15.0),
                                                                       Text(
-                                                                        "Nama User",
+                                                                        fullName,
                                                                         style: myTextTheme
                                                                             .bodyLarge!
                                                                             .copyWith(fontWeight: FontWeight.w600),
@@ -720,6 +605,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             style:
                                                                                 myTextTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
                                                                           ),
+                                                                          const SizedBox(
+                                                                              height: 16.0),
                                                                           Text(
                                                                             logs[indexCard]["logDate"],
                                                                             style:
@@ -739,6 +626,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             style:
                                                                                 myTextTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
                                                                           ),
+                                                                          const SizedBox(
+                                                                              height: 16.0),
                                                                           Text(
                                                                             "${logs[indexCard]["logStart"]} - ${logs[indexCard]["logEnd"]}",
                                                                             style:
@@ -748,6 +637,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       ),
                                                                     ],
                                                                   ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          20.0),
                                                                   Container(
                                                                     height:
                                                                         95.0,
@@ -755,8 +647,51 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             context)
                                                                         .size
                                                                         .width,
-                                                                    color:
-                                                                        redColor1,
+                                                                    decoration:
+                                                                        const BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .all(
+                                                                        Radius.circular(
+                                                                            20.0),
+                                                                      ),
+                                                                      color:
+                                                                          thirdColor,
+                                                                    ),
+                                                                    child: ListView
+                                                                        .builder(
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .zero,
+                                                                      itemCount:
+                                                                          logs[indexCard]["project"]["collaboration"]
+                                                                              .length,
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      itemBuilder:
+                                                                          (context,
+                                                                              indexCollab) {
+                                                                        return Padding(
+                                                                          padding: const EdgeInsets.symmetric(
+                                                                              horizontal: 20.0,
+                                                                              vertical: 5.0),
+                                                                          child:
+                                                                              Container(
+                                                                            decoration:
+                                                                                const BoxDecoration(
+                                                                              color: redColor1,
+                                                                              borderRadius: BorderRadius.all(
+                                                                                Radius.circular(20.0),
+                                                                              ),
+                                                                            ),
+                                                                            child:
+                                                                                Center(
+                                                                              child: Text(logs[indexCard]["project"]["collaboration"][indexCollab], style: myTextTheme.bodyMedium!.copyWith(color: whiteColor)),
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    ),
                                                                   ),
                                                                 ],
                                                               ),
@@ -768,7 +703,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   },
                                                   child: Container(
                                                     width: 200,
-                                                    color: yellowColor1,
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                            color: yellowColor1,
+                                                            boxShadow: [
+                                                          BoxShadow(
+                                                              color: blackColor)
+                                                        ]),
                                                     margin:
                                                         const EdgeInsets.only(
                                                             top: 10),
@@ -798,17 +739,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       .center,
                                                               children: [
                                                                 Text(
-                                                                  // valueDetailTask
-                                                                  //     .hasilDetailTask!
-                                                                  //     .worklogs[
-                                                                  //         indexCard]
-                                                                  //     .project
-                                                                  //     .projectName,
                                                                   logs[indexCard]
-                                                                          [
-                                                                          "project"]
                                                                       [
-                                                                      "projectName"],
+                                                                      "logTitle"],
                                                                   maxLines: 2,
                                                                   overflow:
                                                                       TextOverflow
@@ -821,7 +754,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 ),
                                                                 Text(
                                                                   "${logs[indexCard]["logStart"]} - ${logs[indexCard]["logEnd"]}",
-                                                                  // "${valueDetailTask.hasilDetailTask!.worklogs[indexCard].logStart} - ${valueDetailTask.hasilDetailTask!.worklogs[indexCard].logEnd}",
                                                                   style: myTextTheme
                                                                       .bodyMedium!
                                                                       .copyWith(
@@ -842,14 +774,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ],
                                       ),
                                     ),
-                                  );
-                                },
-                              );
-                            } else {
-                              return Container();
-                            }
-                          },
-                        ),
+                                  ),
+                                );
+                              },
+                            );
+                          } else if (valueDataWorklog.state ==
+                              ResultState.noData) {
+                            return const Center(child: Text("No Data"));
+                          } else {
+                            return const Center(child: Text("No Data"));
+                          }
+                        },
                       ),
                     ),
                   ),
@@ -859,6 +794,35 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class WidgetAppbarDetailWorklog extends StatelessWidget {
+  const WidgetAppbarDetailWorklog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "Detail Task",
+          style: myTextTheme.headlineSmall!
+              .copyWith(fontSize: 20.0, fontWeight: FontWeight.bold),
+        ),
+        IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.cancel_outlined,
+            size: 24.0,
+          ),
+        ),
+      ],
     );
   }
 }

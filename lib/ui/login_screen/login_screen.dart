@@ -1,9 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_worklog/data/provider/login_provider.dart';
+import 'package:flutter_worklog/utils/enum.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/styles.dart';
 import '../../widgets/widget_leftside_login_screen.dart';
+import '../../widgets/widget_sign_up.dart';
 import '../home_screen/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -27,6 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final providerLogin =
+        Provider.of<PostLoginProvider>(context, listen: false);
     return Scaffold(
       body: Row(
         children: [
@@ -43,26 +49,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Account Login",
-                      style: myTextTheme.headlineMedium!
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0, bottom: 37.0),
-                      child: Text(
-                        "If you are already a member you can login with your email address and password.",
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style:
-                            myTextTheme.titleLarge!.copyWith(color: greyColor3),
-                      ),
-                    ),
+                    const WidgetTextLogin(),
+                    const WidgetTextDescLogin(),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Email address",
+                          "Username",
                           style: myTextTheme.titleLarge,
                         ),
                         const SizedBox(height: 12.0),
@@ -73,10 +66,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0)),
                               ),
-                              hintText: "Masukkan email"),
+                              hintText: "Masukkan username"),
                           validator: (valueEmail) {
                             if (valueEmail == null || valueEmail.isEmpty) {
-                              return 'Please enter an email';
+                              return 'Please enter an username';
                             } else {
                               return null;
                             }
@@ -95,6 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 12.0),
                         TextFormField(
                           controller: _passwordController,
+                          obscureText: true,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius:
@@ -121,16 +115,40 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           fixedSize:
                               Size(MediaQuery.of(context).size.width, 64.0)),
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          log("email ${_emailController.text}");
-                          log("password ${_passwordController.text}");
-                          Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(
-                            builder: (context) {
-                              return const HomeScreen();
-                            },
-                          ), (route) => false);
+                          print("email ${_emailController.text}");
+                          print("password ${_passwordController.text}");
+
+                          await providerLogin.postLogin(
+                              _emailController.text, _passwordController.text);
+
+                          var testing =
+                              providerLogin.hasilPost!.success.toString();
+
+                          print("succes alert ${testing}");
+
+                          if (providerLogin.state == ResultState.hasData) {
+                            Navigator.pushAndRemoveUntil(context,
+                                MaterialPageRoute(
+                              builder: (context) {
+                                // return HomeScreen();
+                                return HomeScreen(
+                                  userId: providerLogin
+                                          .hasilPost?.messages.userId ??
+                                      0,
+                                  username: providerLogin
+                                          .hasilPost?.messages.username ??
+                                      "User Dummy",
+                                  fullName: providerLogin
+                                          .hasilPost?.messages.fullName ??
+                                      "fullname Dummy",
+                                );
+                              },
+                            ), (route) => false);
+                          } else {
+                            print("errorasldkjaskdjlaksjdasdjaskjdlkasjd");
+                          }
                         }
                       },
                       child: Text(
@@ -139,14 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             .copyWith(color: whiteColor),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Dont have an account ?"),
-                        TextButton(
-                            onPressed: () {}, child: const Text("Sign up here"))
-                      ],
-                    )
+                    const WidgetSignUp()
                   ],
                 ),
               ),
@@ -154,6 +165,39 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class WidgetTextDescLogin extends StatelessWidget {
+  const WidgetTextDescLogin({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 5.0, bottom: 37.0),
+      child: Text(
+        "If you are already a member you can login with your username and password.",
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+        style: myTextTheme.titleLarge!.copyWith(color: greyColor3),
+      ),
+    );
+  }
+}
+
+class WidgetTextLogin extends StatelessWidget {
+  const WidgetTextLogin({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "Account Login",
+      style: myTextTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold),
     );
   }
 }

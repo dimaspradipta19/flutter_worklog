@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_worklog/ui/login_screen/login_screen.dart';
 
 import '../utils/styles.dart';
 
 class AppbarHomePage extends StatelessWidget {
-  const AppbarHomePage({
-    super.key,
-  });
+  const AppbarHomePage({super.key, required this.fullName});
+
+  final String fullName;
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +15,11 @@ class AppbarHomePage extends StatelessWidget {
       height: 100.0,
       decoration: const BoxDecoration(color: whiteColor),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 50.0),
+        padding: const EdgeInsets.symmetric(horizontal: 100.0),
         child: Row(
           children: [
             Image.asset(
-              "assets/images/logo_worklog.png",
+              "assets/images/logo_worklog_2.png",
               height: 66.0,
               width: 64.0,
             ),
@@ -28,7 +29,7 @@ class AppbarHomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Hi, User",
+                  "Hi, $fullName",
                   style: myTextTheme.bodyLarge!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
@@ -52,7 +53,7 @@ class AppbarHomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "User 1",
+                  fullName,
                   style: myTextTheme.titleLarge!
                       .copyWith(fontWeight: FontWeight.w600),
                 ),
@@ -61,7 +62,43 @@ class AppbarHomePage extends StatelessWidget {
                   style: myTextTheme.titleSmall,
                 ),
               ],
-            )
+            ),
+            const SizedBox(width: 10),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: redColor2),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text("Are you sure want to logout?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushAndRemoveUntil(context,
+                                  MaterialPageRoute(
+                                builder: (context) {
+                                  return const LoginScreen();
+                                },
+                              ), (route) => false);
+                            },
+                            child: const Text("Yes"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("No"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Text(
+                  "Logout",
+                  style: myTextTheme.titleMedium!.copyWith(color: whiteColor),
+                ))
           ],
         ),
       ),

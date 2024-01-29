@@ -16,6 +16,7 @@ const Color greyColor3 = Color(0xFF979797);
 const Color blueColor1 = Color(0xFF283766);
 const Color yellowColor1 = Color(0xFFFFD44A);
 const Color redColor1 = Color(0xFFCD5E74);
+const Color redColor2 = Color(0xFFFF3A3A);
 
 final TextTheme myTextTheme = TextTheme(
   displayLarge: GoogleFonts.poppins(
