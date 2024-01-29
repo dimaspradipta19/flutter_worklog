@@ -2,23 +2,30 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_worklog/models/detail_task_model.dart';
+import 'package:http/http.dart' as http;
 
 class DetailTaskService {
-  // final baseUrl = "";
-  // final apiKey = "";
+  final String baseUrl = "http://localhost:18047/";
+  final String endpoint = "User/details/";
   // final Dio _dio = Dio();
 
-  Future<DetailTaskModel> getDetailTask() async {
+  Future<DetailTaskModel> getDetailTask(int userId) async {
     try {
       // var response = await _dio.get(baseUrl);
 
-      final String response =
-          await rootBundle.loadString('assets/dataTask.json');
+      // final String response =
+      //     await rootBundle.loadString('assets/dataTask.json');
 
-      if (response.isNotEmpty) {
-        var resultLogin = DetailTaskModel.fromJson(json.decode(response));
+      var response = await http.get(
+        Uri.parse(baseUrl + endpoint + userId.toString()),
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var resultLogin = DetailTaskModel.fromJson(json.decode(response.body));
         return resultLogin;
       } else {
         return _handleError(response);
@@ -27,8 +34,6 @@ class DetailTaskService {
       return _handleError(e);
     }
   }
-
-  
 
   _handleError(error) {
     String errorDesc = "";

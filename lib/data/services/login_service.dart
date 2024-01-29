@@ -1,26 +1,41 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-
+import 'package:http/http.dart' as http;
 import '../../models/login_model.dart';
 
 class PostLoginService {
-  final baseUrl = "";
-  final apiKey = "";
-  final Dio _dio = Dio();
+  final baseUrl = "http://localhost:18047";
+  final endpoint = "/Login";
+  // final Dio _dio = Dio();
 
   Future<PostLoginModel?> postLogin(String username, String password) async {
     try {
-      var response = await _dio.get(baseUrl);
+      final body = {
+        'username': username,
+        'password': password,
+      };
+      var response = await http.post(
+        Uri.parse(baseUrl + endpoint),
+        headers: {
+          "content-type": "application/json",
+        },
+        body: jsonEncode(body),
+      );
 
       if (response.statusCode == 200) {
-        var resultLogin = PostLoginModel.fromJson(response.data);
+        Map<String, dynamic> decodedJson = jsonDecode(response.body);
+        var resultLogin = PostLoginModel.fromJson(decodedJson);
+        print("status code : ${response.statusCode}");
+        print("message code : ${resultLogin.messages.fullName}");
         return resultLogin;
       } else {
         return _handleError(response);
       }
     } catch (e) {
-      return _handleError(e);
+      // return _handleError(e);
+      print(e.toString());
     }
   }
 

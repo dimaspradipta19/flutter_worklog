@@ -5,12 +5,12 @@ import 'package:flutter_worklog/data/services/login_service.dart';
 import 'package:flutter_worklog/models/login_model.dart';
 import 'package:flutter_worklog/utils/enum.dart';
 
-class LoginProvider extends ChangeNotifier {
+class PostLoginProvider extends ChangeNotifier {
   PostLoginModel? hasilPost;
   PostLoginService servicesLogin = PostLoginService();
   ResultState state = ResultState.noData;
 
-  Future<PostLoginModel?> postPostLoginModel(String username, String password) async {
+  Future<PostLoginModel?> postLogin(String username, String password) async {
     try {
       state = ResultState.isLoading;
       notifyListeners();
@@ -25,6 +25,6 @@ class LoginProvider extends ChangeNotifier {
     } catch (e) {
       log(e.toString());
     }
-    return null;
+    return hasilPost;
   }
 }

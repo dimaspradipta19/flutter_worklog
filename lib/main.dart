@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_worklog/data/provider/get_data_worklog_provider.dart';
-import 'package:flutter_worklog/data/provider/login_provider.dart';
 import 'package:flutter_worklog/data/provider/picker_provider.dart';
-import 'package:flutter_worklog/data/provider/post_data_dummy_provider.dart';
+import 'package:flutter_worklog/data/provider/post_worklog_provider.dart';
 import 'package:flutter_worklog/ui/home_screen/home_screen.dart';
+import 'package:flutter_worklog/ui/login_screen/login_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'data/provider/detail__task_provider.dart';
+import 'data/provider/detail_task_provider.dart';
+import 'data/provider/login_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => LoginProvider(),
+          create: (context) => PostLoginProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => DetailTaskProvider(),
@@ -28,22 +29,25 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => PickerProvider(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => PostDataDummyProvider(),
-        ),
+        // ChangeNotifierProvider(
+        //   create: (context) => PostDataDummyProvider(),
+        // ),
         ChangeNotifierProvider(
           create: (context) => DataWorklogProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PostDataWorklogProvider(),
         ),
       ],
       child: MaterialApp(
         title: 'WorkLog App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,
         ),
-        // home: const LoginScreen(),
-        home: const HomeScreen(),
+        home: const LoginScreen(),
+        // home: const HomeScreen(),
       ),
     );
   }

@@ -14,7 +14,11 @@ class PickerProvider extends ChangeNotifier {
         await showTimePicker(context: context, initialTime: TimeOfDay.now());
 
     if (timeStart != null) {
-      _timeStartController.text = "${timeStart.hour}:${timeStart.minute}";
+      // Format hours with leading zeros if necessary
+      String hours = timeStart.hour.toString().padLeft(2, '0');
+      String minutes = timeStart.minute.toString().padLeft(2, '0');
+
+      _timeStartController.text = "$hours:$minutes:00";
       notifyListeners();
     }
   }
@@ -24,7 +28,10 @@ class PickerProvider extends ChangeNotifier {
         await showTimePicker(context: context, initialTime: TimeOfDay.now());
 
     if (timeEnd != null) {
-      _timeEndController.text = "${timeEnd.hour}:${timeEnd.minute}";
+      String hours = timeEnd.hour.toString().padLeft(2, '0');
+      String minutes = timeEnd.minute.toString().padLeft(2, '0');
+
+      _timeEndController.text = "$hours:$minutes:00";
       notifyListeners();
     }
   }
@@ -50,5 +57,11 @@ class PickerProvider extends ChangeNotifier {
     _timeEndController.dispose();
     _dateController.dispose();
     super.dispose();
+  }
+
+  void clear() {
+    _timeStartController.clear();
+    _timeEndController.clear();
+    _dateController.clear();
   }
 }

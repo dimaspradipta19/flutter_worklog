@@ -9,15 +9,15 @@ class DataWorklogProvider with ChangeNotifier {
 
   Map<String, List<dynamic>> get groupedWorklogs => _groupedWorklogs;
 
-  Future<void> initializeWorklogs() async {
+  Future<void> initializeWorklogs(int userId) async {
     try {
       state = ResultState.isLoading;
       notifyListeners();
 
-      String jsonData = await _worklogService.loadJsonData();
-      _groupedWorklogs = _worklogService.groupWorklogsByDate(jsonData);
+      final groupedWorklogs = await _worklogService.getDataWorklog(userId);
 
-      if (_groupedWorklogs.isNotEmpty) {
+      if (groupedWorklogs.isNotEmpty) {
+        _groupedWorklogs = groupedWorklogs;
         state = ResultState.hasData;
         notifyListeners();
       } else {

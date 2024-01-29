@@ -9,11 +9,11 @@ class DetailTaskProvider extends ChangeNotifier {
   DetailTaskService servicesDetail = DetailTaskService();
   ResultState state = ResultState.noData;
 
-  Future<DetailTaskModel?> getDataDetail() async {
+  Future<DetailTaskModel?> getDataDetail(int userId) async {
     try {
       state = ResultState.isLoading;
       notifyListeners();
-      hasilDetailTask = await servicesDetail.getDetailTask();
+      hasilDetailTask = await servicesDetail.getDetailTask(userId);
       if (hasilDetailTask != null) {
         state = ResultState.hasData;
         notifyListeners();
@@ -24,6 +24,7 @@ class DetailTaskProvider extends ChangeNotifier {
     } catch (e) {
       log(e.toString());
     }
+    notifyListeners();
     return null;
   }
 }
