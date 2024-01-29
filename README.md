@@ -1,16 +1,28 @@
-# flutter_worklog
+# Mini Project-Worklog
 
-A new Flutter project.
+Worklog is an web-based application to streamline work processes, improve productivity, and provide insightful analytics.
 
-## Getting Started
+This mini project created by squad 4 with the participants are
 
-This project is a starting point for a Flutter application.
+1. Andhika Fariz as Scrum Master
+2. Dinda Prilliagrandi Pasulu as Product Owner
+3. Dionisius Darrel Gunadi as Technical Lead
+4. Martin Christian Setiawan as Back-end Developer
+5. Dimas Pradipta Putra as Front-end Developer
+6. Devita Helga Safitri as UI/UX Designer
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Background
+IT Directorate plans to introduce work log monitoring to analyze the effectiveness of employee work schedules and identify potential improvements for resource allocation and task management.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Features
+1. Create Worklog
+2. View Worklog List
+3. View Worklogs Detail
+
+## Tech Stack
+1. ASP .NET for Back-End
+2. Flutter for Front-End
+3. Notion for Tracking progress
+4. Figma for Designing the apps
+
